@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "165074784793",
+    "firebase_url": "https://firstcarestartup.firebaseio.com",
+    "project_id": "firstcarestartup",
+    "storage_bucket": "firstcarestartup.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165074784793:android:a3280e4ff822a955395088",
+        "android_client_info": {
+          "package_name": "com.example.test_clone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "165074784793-qq54uumftf37kipuenai1c89ahf7ak69.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.test_clone",
+            "certificate_hash": "e2cabc5e73453e2fb39d85d361537ace39032555"
+          }
+        },
+        {
+          "client_id": "165074784793-q35rul3kq9111lenjmfj5qn0aokctau7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_JuF_r2sBNGa7vkjptfu2ohJJ-1R0QhA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "165074784793-q35rul3kq9111lenjmfj5qn0aokctau7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
