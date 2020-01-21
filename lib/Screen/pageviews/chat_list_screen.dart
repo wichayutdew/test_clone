@@ -15,7 +15,7 @@ final FirebaseRepository _repository =  FirebaseRepository();
 
 class _ChatListScreenState extends State<ChatListScreen> {
   String currentUserid;
-  String initials;
+  String initials = "";
 
   @override
   void initState() {
