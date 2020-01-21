@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:test_clone/models/message.dart';
 import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
@@ -25,11 +29,14 @@ class _ChatScreenState extends State<ChatScreen> {
   User sender;
   String _currentUserId;
 
+  File image;
+  String imageUrl;
+
   bool isWriting = false;
 
   void initState(){
     super.initState();
-
+    imageUrl = '';
     _repository.getCurrentUser().then((user){
       _currentUserId = user.uid;
 
@@ -118,7 +125,6 @@ class _ChatScreenState extends State<ChatScreen> {
         color: Colors.white,
         fontSize: 16.0,),
     );
-
   }
 
   Widget receiverLayout(DocumentSnapshot snapshot) {
@@ -311,6 +317,26 @@ class _ChatScreenState extends State<ChatScreen> {
     _controller.jumpTo(_controller.position.minScrollExtent);
     _repository.addMessageToDb(_message,sender,widget.receiver);
   }
+
+  // getImage() async {
+  //   image = await ImagePicker.pickImage(source: ImageSource.gallery);
+  //   if (image != null) {
+  //     uploadFile();
+  //   }
+  // }
+  // uploadFile() async {
+  //   String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+  //   StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+  //   StorageUploadTask uploadTask = reference.putFile(image);
+  //   StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+  //   storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
+  //     imageUrl = downloadUrl;
+  //     setState(() {
+  //       onSendMessage(imageUrl, 1);
+  //     });
+  //   }, onError: (err) {
+  //   });
+  // }
 
   CustomAppBar customAppBar(context) {
     return CustomAppBar(

@@ -1,56 +1,57 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:test_clone/models/notification.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class MessagingWidget extends StatefulWidget {
-  @override
-  _MessagingWidgetState createState() => _MessagingWidgetState();
-}
+class NotificationWidget{
+  final FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+ void registerNotification(currentUserId) {
+    firebaseMessaging.requestNotificationPermissions();
 
-class _MessagingWidgetState extends State<MessagingWidget> {
+    firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
+      print('onMessage: $message');
+      showNotification(message['notification']);
+      return;
+    }, onResume: (Map<String, dynamic> message) {
+      print('onResume: $message');
+      return;
+    }, onLaunch: (Map<String, dynamic> message) {
+      print('onLaunch: $message');
+      return;
+    });
 
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final List<Notif> notifs = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _firebaseMessaging.configure(
-       onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-
-        final notification = message['notification'];
-        setState(() {
-          notifs.add(Notif(
-              title: notification['title'], body: notification['body']));
-        });
-       },
-       onLaunch: (Map<String, dynamic> message) async {
-         print("onLaunch: $message");
-
-         final notification = message['data'];
-        setState(() {
-          notifs.add(Notif(
-            title:notification['title'],
-            body: notification['body'],
-          ));
-        });
-       },
-       onResume: (Map<String, dynamic> message) async {
-         print("onResume: $message");
-       },
-     );
-     _firebaseMessaging.requestNotificationPermissions(
-       const IosNotificationSettings(sound: true, badge: true, alert: true)
-     );
+    firebaseMessaging.getToken().then((token) {
+      print('token: $token');
+      Firestore.instance.collection('users').document(currentUserId).updateData({'pushToken': token});
+    }).catchError((err) {
+      Fluttertoast.showToast(msg: err.message.toString());
+    });
+ }
+ void configLocalNotification() {
+    var initializationSettingsAndroid = new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
-  @override
-  Widget build(BuildContext context) => ListView(
-    children: notifs.map(buildNotification).toList(),
-  );
-
-  Widget buildNotification(Notif notif) => ListTile(
-    title : Text(notif.title),
-    subtitle: Text(notif.body),
-  );
+  void showNotification(message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+      'com.exmaple.testClone',
+      'Flutter chat demo',
+      'your channel description',
+      playSound: true,
+      enableVibration: true,
+      importance: Importance.Max,
+      priority: Priority.High,
+    );
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics =
+        new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, message['title'].toString(), message['body'].toString(), platformChannelSpecifics,
+        payload: json.encode(message));
+  }
 }

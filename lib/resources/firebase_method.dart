@@ -59,6 +59,7 @@ class FirebaseMethod{
     await _googleSignIn.disconnect();
     await _googleSignIn.signOut();
     return  await _auth.signOut();
+    
   }
 
   Future<List<User>> fetchAllUsers(FirebaseUser currentUser) async {
