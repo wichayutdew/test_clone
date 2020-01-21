@@ -16,13 +16,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp>{
   FirebaseRepository _repository = FirebaseRepository();
+  
   NotificationWidget _notificationWidget = NotificationWidget();
+  
   var _currentUserId;
 
   @override
   void initState() {
-    super.initState();
     _repository.getCurrentUser().then((user){_currentUserId = user.uid;});
+    super.initState();
+    
     _notificationWidget.registerNotification(_currentUserId);
     _notificationWidget.configLocalNotification();
   }

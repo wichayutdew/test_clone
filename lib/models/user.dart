@@ -6,6 +6,7 @@ class User {
   String status;
   int state;
   String profilePhoto;
+  String pushToken;
 
   User({
     this.uid,
@@ -15,6 +16,7 @@ class User {
     this.status,
     this.state,
     this.profilePhoto,
+    this.pushToken
   });
 
   Map toMap(User user) {
@@ -26,6 +28,7 @@ class User {
     data["status"] = user.status;
     data["state"] = user.state;
     data["profile_photo"] = user.profilePhoto;
+    data["pushToken"] = user.pushToken;
     return data;
   }
 
@@ -37,5 +40,6 @@ class User {
     this.status = mapData['status'];
     this.state = mapData['state'];
     this.profilePhoto = mapData['profile_photo'];
+    this.pushToken = mapData['pushToken'];
   }
 }

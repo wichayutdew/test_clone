@@ -50,7 +50,8 @@ class FirebaseMethod{
       email: currentUser.email,
       name: currentUser.displayName,
       profilePhoto: currentUser.photoUrl,
-      username: username
+      username: username,
+      pushToken:''
     );
     firestore.collection("users").document(currentUser.uid).setData(user.toMap(user));
   }

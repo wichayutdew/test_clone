@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -26,6 +25,7 @@ class NotificationWidget{
 
     firebaseMessaging.getToken().then((token) {
       print('token: $token');
+      
       Firestore.instance.collection('users').document(currentUserId).updateData({'pushToken': token});
     }).catchError((err) {
       Fluttertoast.showToast(msg: err.message.toString());
