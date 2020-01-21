@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:test_clone/Screen/login_screen.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/utils/universal_variables.dart';
 import 'package:test_clone/utils/utilities.dart';
 import 'package:test_clone/widgets/appbar.dart';
 import 'package:test_clone/widgets/custom_tile.dart';
+import 'package:test_clone/widgets/notification_widget.dart';
 
 class ChatListScreen extends StatefulWidget {
   @override
@@ -12,11 +14,12 @@ class ChatListScreen extends StatefulWidget {
 
 //global
 final FirebaseRepository _repository =  FirebaseRepository();
+final NotificationWidget _notificationWidget = NotificationWidget();
 
 class _ChatListScreenState extends State<ChatListScreen> {
   String currentUserid;
   String initials = "";
-
+  
   @override
   void initState() {
     super.initState();
@@ -25,7 +28,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
         currentUserid = user.uid;
         initials =  Utils.getInitials(user.displayName);
       });
+      _notificationWidget.registerNotification(user.uid);
+      _notificationWidget.configLocalNotification();
     });
+    
   }
 
   CustomAppBar customAppBar(BuildContext context){
@@ -35,7 +41,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           Icons.notifications,
           color : Colors.white,
         ),
-        onPressed : () {},
+        onPressed : () {_notificationWidget.showNotification();},
       ),
       title : UserCircle(initials),
       centerTitle : true,
@@ -55,7 +61,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
             Icons.more_vert,
             color : Colors.white,
           ),
-          onPressed : () {},
+          onPressed : () {
+            _repository.signOut();
+            Navigator.pop(context); 
+            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
+          },
         ),
       ],
     );
