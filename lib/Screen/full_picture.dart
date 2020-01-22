@@ -12,7 +12,7 @@ class FullPhoto extends StatelessWidget {
       appBar: new AppBar(
         title: new Text(
           'FULL PHOTO',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -42,6 +42,10 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: PhotoView(imageProvider: NetworkImage(url)));
+    return Container(
+      child: PhotoView(
+        imageProvider: NetworkImage(url),
+      )
+    );
   }
 }

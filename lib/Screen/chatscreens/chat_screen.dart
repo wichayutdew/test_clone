@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:test_clone/Screen/full_picture.dart';
 import 'package:test_clone/models/message.dart';
 import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
@@ -35,6 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState(){
     super.initState();
     imageUrl = '';
+    isLoading = false;
     _repository.getCurrentUser().then((user){
       _currentUserId = user.uid;
       setState(() {
@@ -94,28 +99,6 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget senderLayout(DocumentSnapshot snapshot) {
-    Radius messageRadius = Radius.circular(10);
-
-    return Container(
-      margin: EdgeInsets.only(top: 12),
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
-      decoration: BoxDecoration(
-        color: UniversalVariables.senderColor,
-        borderRadius: BorderRadius.only(
-          topLeft: messageRadius,
-          topRight: messageRadius,
-          bottomLeft: messageRadius,
-        ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: getMessage(snapshot),
-      ),
-    );
-  }
-
   getMessage(DocumentSnapshot snapshot){
     return Text(
       snapshot['message'],
@@ -125,26 +108,146 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  Widget senderLayout(DocumentSnapshot snapshot) {
+    Radius messageRadius = Radius.circular(10);
+    Container _container = new Container();
+    if(snapshot['type']=='text'){
+      _container = Container(
+        margin: EdgeInsets.only(top: 12),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
+        decoration: BoxDecoration(
+          color: UniversalVariables.senderColor,
+          borderRadius: BorderRadius.only(
+            topLeft: messageRadius,
+            topRight: messageRadius,
+            bottomLeft: messageRadius,
+          ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: getMessage(snapshot),
+        ),
+      );
+    }else if(snapshot['type']=='image'){
+      _container = Container(
+        child: FlatButton(
+          child: Material(
+            child: CachedNetworkImage(
+              placeholder: (context, url) => Container(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                ),
+                width: 200.0,
+                height: 200.0,
+                padding: EdgeInsets.all(70.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8.0),
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Material(
+                child: Image.asset(
+                  'images/img_not_available.jpeg',
+                  width: 200.0,
+                  height: 200.0,
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(8.0),
+                ),
+                clipBehavior: Clip.hardEdge,
+              ),
+              imageUrl: snapshot['message'],
+              width: 200.0,
+              height: 200.0,
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            clipBehavior: Clip.hardEdge,
+          ),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => FullPhoto(url: snapshot['message'])));
+          },
+          padding: EdgeInsets.all(0),
+        )
+      );
+    }
+    return _container;
+  }
+
   Widget receiverLayout(DocumentSnapshot snapshot) {
     Radius messageRadius = Radius.circular(10);
-
-    return Container(
-      margin: EdgeInsets.only(top: 12),
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
-      decoration: BoxDecoration(
-        color: UniversalVariables.receiverColor,
-        borderRadius: BorderRadius.only(
-          bottomRight: messageRadius,
-          topRight: messageRadius,
-          bottomLeft: messageRadius,
+    Container _container = new Container();
+    if(snapshot['type'] == 'text'){
+      _container = Container(
+        margin: EdgeInsets.only(top: 12),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
+        decoration: BoxDecoration(
+          color: UniversalVariables.receiverColor,
+          borderRadius: BorderRadius.only(
+            bottomRight: messageRadius,
+            topRight: messageRadius,
+            bottomLeft: messageRadius,
+          ),
         ),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: getMessage(snapshot),
-      ),
-    );
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: getMessage(snapshot),
+        ),
+      );
+    }else if(snapshot['type']=='image'){
+      _container = Container(
+        child: FlatButton(
+          child: Material(
+            child: CachedNetworkImage(
+              placeholder: (context, url) => Container(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                ),
+                width: 200.0,
+                height: 200.0,
+                padding: EdgeInsets.all(70.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8.0),
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Material(
+                child: Image.asset(
+                  'images/img_not_available.jpeg',
+                  width: 200.0,
+                  height: 200.0,
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(8.0),
+                ),
+                clipBehavior: Clip.hardEdge,
+              ),
+              imageUrl: snapshot['message'],
+              width: 200.0,
+              height: 200.0,
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            clipBehavior: Clip.hardEdge,
+          ),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => FullPhoto(url: snapshot['message'])));
+          },
+          padding: EdgeInsets.all(0),
+        )
+      );
+    }
+    return _container;
   }
 
   Widget chatControls(){
@@ -279,7 +382,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Icon(Icons.record_voice_over),
                 ),
-          isWriting ? Container() : Icon(Icons.camera_alt),
+          isWriting ? Container() : IconButton(icon:Icon(Icons.camera_alt), onPressed: () => {getImage()},),
           isWriting
               ? Container(
                   margin: EdgeInsets.only(left: 10),
@@ -291,7 +394,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       Icons.send,
                       size: 15,
                     ),
-                    onPressed: () => sendMessage(),
+                    onPressed: () => sendMessage(textFieldController.text,'text'),
                   ))
               : Container()
         ],
@@ -299,44 +402,57 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  sendMessage() {
-    var text = textFieldController.text;
-    
-    Message _message = Message(
-      receiverId : widget.receiver.uid,
-      senderId : sender.uid,
-      message: text,
-      timestamp: FieldValue.serverTimestamp(),
-      type:'text',
-    );
-
+  sendMessage(String content, String type) {
+    Message _message = new Message();
+    if(type == 'text'){
+      _message = Message(
+        receiverId : widget.receiver.uid,
+        senderId : sender.uid,
+        message: content,
+        timestamp: FieldValue.serverTimestamp(),
+        type:'text',
+      );
+      textFieldController.clear();
+    }else if(type == 'image'){
+      _message = Message(
+        receiverId : widget.receiver.uid,
+        senderId : sender.uid,
+        message: content,
+        timestamp: FieldValue.serverTimestamp(),
+        type:'image',
+      );
+    }
     setState(() {
-      isWriting = false;
+        isWriting = false;
     });
-    textFieldController.clear();
     _controller.jumpTo(_controller.position.minScrollExtent);
     _repository.addMessageToDb(_message,sender,widget.receiver);
+    
   }
 
-  // getImage() async {
-  //   image = await ImagePicker.pickImage(source: ImageSource.gallery);
-  //   if (image != null) {
-  //     uploadFile();
-  //   }
-  // }
-  // uploadFile() async {
-  //   String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-  //   StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-  //   StorageUploadTask uploadTask = reference.putFile(image);
-  //   StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
-  //   storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
-  //     imageUrl = downloadUrl;
-  //     setState(() {
-  //       onSendMessage(imageUrl, 1);
-  //     });
-  //   }, onError: (err) {
-  //   });
-  // }
+  getImage() async {
+    image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        isLoading = true;
+      });
+      uploadFile();
+    }
+  }
+  
+  uploadFile() async {
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = reference.putFile(image);
+    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
+    storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
+      imageUrl = downloadUrl;
+      setState(() {
+        sendMessage(imageUrl,'image');
+      });
+    }, onError: (err) {
+    });
+  }
 
   CustomAppBar customAppBar(context) {
     return CustomAppBar(
