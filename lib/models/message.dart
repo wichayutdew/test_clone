@@ -6,7 +6,6 @@ class Message {
   String type;
   String message;
   FieldValue timestamp;
-  String photoUrl;
   
   Message({this.senderId, this.receiverId, this.type, this.message, this.timestamp});
 
