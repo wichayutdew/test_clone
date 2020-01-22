@@ -51,7 +51,8 @@ class FirebaseMethod{
       name: currentUser.displayName,
       profilePhoto: currentUser.photoUrl,
       username: username,
-      pushToken:''
+      pushToken:'',
+      chatWith:null,
     );
     firestore.collection("users").document(currentUser.uid).setData(user.toMap(user));
   }

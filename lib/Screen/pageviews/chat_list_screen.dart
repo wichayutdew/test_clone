@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:test_clone/Screen/login_screen.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
@@ -30,6 +31,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
       });
       _notificationWidget.registerNotification(user.uid);
       _notificationWidget.configLocalNotification();
+      Firestore.instance.collection('users').document(user.uid).updateData({'chatWith': ''});
     });
     
   }
@@ -41,7 +43,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           Icons.notifications,
           color : Colors.white,
         ),
-        onPressed : () {_notificationWidget.showNotification();},
+        onPressed : () {_notificationWidget.showNotification2();},
       ),
       title : UserCircle(initials),
       centerTitle : true,

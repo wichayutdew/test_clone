@@ -19,7 +19,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
   TextEditingController textFieldController = TextEditingController();
   FirebaseRepository _repository = FirebaseRepository();
   ScrollController _controller = ScrollController();
@@ -28,7 +27,8 @@ class _ChatScreenState extends State<ChatScreen> {
   String _currentUserId;
 
   File image;
-  String imageUrl;
+  String imageUrl = '';
+  bool isLoading = false;
 
   bool isWriting = false;
 
@@ -44,6 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
           profilePhoto: user.photoUrl,
         );
       });
+      Firestore.instance.collection('users').document(user.uid).updateData({'chatWith': widget.receiver.uid});
     });
   }
 
@@ -170,7 +171,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         child: Icon(
                           Icons.close,
                         ),
-                        onPressed: () => Navigator.maybePop(context),
+                        onPressed: () {
+                          Navigator.maybePop(context);
+                        },
                       ),
                       Expanded(
                         child: Align(
@@ -342,6 +345,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Icons.arrow_back,
         ),
         onPressed: () {
+          Firestore.instance.collection('users').document(_currentUserId).updateData({'chatWith': ''});
           Navigator.pop(context);
         },
       ),
