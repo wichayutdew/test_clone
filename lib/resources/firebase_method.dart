@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:test_clone/models/call.dart';
 import 'package:test_clone/models/message.dart';
 import 'package:test_clone/models/user.dart';
 import 'package:test_clone/utils/utilities.dart';
@@ -77,11 +78,16 @@ class FirebaseMethod{
     return userList;
   }
 
-  Future<void> addMessageToDb(Message message, User sender, User receiver) async {
+  Future<void> addMessageToDb(Message message) async {
     var map = message.toMap();
 
     await firestore.collection("messages").document(message.senderId).collection(message.receiverId).add(map);
 
     return await firestore.collection("messages").document(message.receiverId).collection(message.senderId).add(map);
+  }
+
+  Future<void> addChannelName(CallData callData) async {
+    var map = callData.toMap();
+    return await firestore.collection("calls").document(callData.channelName).setData(map);
   }
 }

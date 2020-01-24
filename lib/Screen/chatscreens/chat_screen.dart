@@ -5,6 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:test_clone/models/call.dart';
+import 'package:uuid/uuid.dart';
+
+import 'package:test_clone/Screen/call_page.dart';
 import 'package:test_clone/Screen/full_picture.dart';
 import 'package:test_clone/models/message.dart';
 import 'package:test_clone/models/user.dart';
@@ -12,6 +17,7 @@ import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/utils/universal_variables.dart';
 import 'package:test_clone/widgets/appbar.dart';
 import 'package:test_clone/widgets/custom_tile.dart';
+
 
 class ChatScreen extends StatefulWidget {
   final User receiver;
@@ -26,6 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController textFieldController = TextEditingController();
   FirebaseRepository _repository = FirebaseRepository();
   ScrollController _controller = ScrollController();
+  Uuid uuid = Uuid();
 
   User sender;
   String _currentUserId;
@@ -35,6 +42,12 @@ class _ChatScreenState extends State<ChatScreen> {
   bool isLoading = false;
 
   bool isWriting = false;
+
+  @override
+  void dispose() {
+    Firestore.instance.collection('users').document(_currentUserId).updateData({'chatWith': ''});
+    super.dispose();
+  }
 
   void initState(){
     super.initState();
@@ -426,7 +439,7 @@ class _ChatScreenState extends State<ChatScreen> {
         isWriting = false;
     });
     _controller.jumpTo(_controller.position.minScrollExtent);
-    _repository.addMessageToDb(_message,sender,widget.receiver);
+    _repository.addMessageToDb(_message);
     
   }
 
@@ -454,6 +467,23 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  Future<void> _handleCameraAndMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
+    );
+  }
+
+  uploadCallData(channelName){
+    CallData _callData = CallData(
+      receiverId : widget.receiver.uid,
+      senderId : sender.uid,
+      channelName: channelName,
+      timestamp: FieldValue.serverTimestamp(),
+    );
+    _repository.addChannelName(_callData);
+  }
+
+
   CustomAppBar customAppBar(context) {
     return CustomAppBar(
       leading: IconButton(
@@ -461,7 +491,6 @@ class _ChatScreenState extends State<ChatScreen> {
           Icons.arrow_back,
         ),
         onPressed: () {
-          Firestore.instance.collection('users').document(_currentUserId).updateData({'chatWith': ''});
           Navigator.pop(context);
         },
       ),
@@ -474,7 +503,19 @@ class _ChatScreenState extends State<ChatScreen> {
           icon: Icon(
             Icons.video_call,
           ),
-          onPressed: () {},
+          onPressed: () {
+            _handleCameraAndMic();
+            String channelName = uuid.v1();
+            uploadCallData(channelName);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CallPage(
+                  channelName: channelName,
+                ),
+            ),
+      );
+          },
         ),
         IconButton(
           icon: Icon(

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:test_clone/models/call.dart';
 import 'package:test_clone/models/message.dart';
 import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_method.dart';
@@ -18,5 +19,7 @@ class FirebaseRepository{
 
   Future<List<User>> fetchAllUsers(FirebaseUser user) => _firebaseMethod.fetchAllUsers(user);
 
-  Future<void> addMessageToDb(Message message, User sender, User receiver) => _firebaseMethod.addMessageToDb(message,sender,receiver);
+  Future<void> addMessageToDb(Message message) => _firebaseMethod.addMessageToDb(message);
+
+  Future <void> addChannelName(CallData callData) => _firebaseMethod.addChannelName(callData);
 }
