@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:test_clone/resources/firebase_repository.dart';
 
 class CallPage extends StatefulWidget {
     /// non-modifiable channel name of the page
@@ -12,6 +15,8 @@ class CallPage extends StatefulWidget {
 }
 
 class _CallPageState extends State<CallPage> {
+
+  FirebaseRepository _repository = FirebaseRepository();
 
   static const APP_ID = '9826de69c0a14497b203f63fbc0aa7cb';
   static final _users = <int>[];
@@ -33,7 +38,6 @@ class _CallPageState extends State<CallPage> {
     // initialize agora sdk
     _initialize(widget.channelName);
   }
-
 
 
   Future<void> _initialize(channelName) async {
@@ -109,6 +113,7 @@ class _CallPageState extends State<CallPage> {
   }
 
   Future<void> _onCallEnd(BuildContext context) async {
+    _repository.deleteChannelName(widget.channelName);
     Navigator.pop(context);
   }
 

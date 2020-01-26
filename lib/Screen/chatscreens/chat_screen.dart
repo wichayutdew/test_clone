@@ -513,8 +513,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 builder: (context) => CallPage(
                   channelName: channelName,
                 ),
-            ),
-      );
+              ),
+            );
           },
         ),
         IconButton(

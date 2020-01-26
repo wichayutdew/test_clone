@@ -90,4 +90,8 @@ class FirebaseMethod{
     var map = callData.toMap();
     return await firestore.collection("calls").document(callData.channelName).setData(map);
   }
+
+  Future<void> deleteChannelName(String channelName) async {
+    return await firestore.collection("calls").document(channelName).delete();
+  }
 }

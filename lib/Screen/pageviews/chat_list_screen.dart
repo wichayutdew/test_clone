@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:test_clone/Screen/incoming_call_page.dart';
 import 'package:test_clone/Screen/login_screen.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/utils/universal_variables.dart';
@@ -33,8 +34,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
       _notificationWidget.configLocalNotification();
       Firestore.instance.collection('users').document(user.uid).updateData({'chatWith': ''});
     });
-    
   }
+
 
   CustomAppBar customAppBar(BuildContext context){
     return CustomAppBar(
@@ -72,6 +73,25 @@ class _ChatListScreenState extends State<ChatListScreen> {
       ],
     );
   }
+
+  // Widget call(){
+  //   return StreamBuilder(
+  //     stream: Firestore.instance.collection("calls").where("receiverId", isEqualTo : currentUserid).snapshots(),
+  //     builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
+  //       if (snapshot.data.documents.length != 0){
+  //         DocumentSnapshot snapData = snapshot.data.documents[0];
+  //         return Scaffold(
+  //           body : IncomingCallPage(channelName: snapData['channelName']),
+  //         );
+          
+  //       }
+  //       return Scaffold(
+  //         backgroundColor : UniversalVariables.blackColor,
+  //         body : ChatListContainer(currentUserid),
+  //         );
+  //     },
+  //   );
+  // }
   
   @override
   Widget build(BuildContext context) {
