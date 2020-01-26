@@ -46,6 +46,7 @@ class _CallPageState extends State<CallPage> {
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
     await AgoraRtcEngine.enableWebSdkInteroperability(true);
+    AgoraRtcEngine.setParameters("{\"rtc.log_filter\": 65535}");
     await AgoraRtcEngine.setParameters(
         '''{\"che.video.lowBitRateStreamParameter\":{\"width\":320,\"height\":180,\"frameRate\":15,\"bitRate\":140}}''');
     await AgoraRtcEngine.joinChannel(null,channelName,null,0);
@@ -147,9 +148,9 @@ class _CallPageState extends State<CallPage> {
         return Container(
             child: Column(
               children: <Widget>[
-                _videoView(views[0]),
-              ],
-            ),
+                _videoView(views[0])
+              ]
+            )
         );
       case 2:
         return Container(
@@ -157,7 +158,7 @@ class _CallPageState extends State<CallPage> {
               children: <Widget>[
                 _expandedVideoRow([views[0]]),
                 _expandedVideoRow([views[1]])
-              ],
+              ]
             )
         );
       case 3:
@@ -166,7 +167,7 @@ class _CallPageState extends State<CallPage> {
               children: <Widget>[
                 _expandedVideoRow(views.sublist(0, 2)),
                 _expandedVideoRow(views.sublist(2, 3))
-              ],
+              ]
             )
         );
       case 4:
@@ -175,7 +176,7 @@ class _CallPageState extends State<CallPage> {
               children: <Widget>[
                 _expandedVideoRow(views.sublist(0, 2)),
                 _expandedVideoRow(views.sublist(2, 4))
-              ],
+              ]
             )
         );
       default:
@@ -292,13 +293,21 @@ class _CallPageState extends State<CallPage> {
         else
           return true;
       },
-      child: Stack(
-        children: <Widget>[
-          _viewRows(),
-          _panel(),
-          _toolbar(),
-        ],
-      ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Agora Flutter QuickStart'),
+        ),
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Stack(
+            children: <Widget>[
+              _viewRows(),
+              _panel(),
+              _toolbar(),
+            ],
+          ),
+        ),
+      )
     );
   }
 }
