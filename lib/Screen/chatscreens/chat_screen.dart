@@ -9,8 +9,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:test_clone/models/call.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:test_clone/Screen/call_page.dart';
-import 'package:test_clone/Screen/full_picture.dart';
+import 'package:test_clone/Screen/callscreens/call_page.dart';
+import 'package:test_clone/Screen/chatscreens/full_picture.dart';
 import 'package:test_clone/models/message.dart';
 import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';

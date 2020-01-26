@@ -28,7 +28,8 @@ class _CallPageState extends State<CallPage> {
     // clear users
     _users.clear();
     // destroy sdk
-    _dispose();
+    AgoraRtcEngine.leaveChannel();
+    AgoraRtcEngine.destroy();
     super.dispose();
   }
 
@@ -91,11 +92,6 @@ class _CallPageState extends State<CallPage> {
       final info = 'firstRemoteVideo: $uid ${width}x $height';
       _infoStrings.add(info);
     };
-  }
-
-  Future<void> _dispose() async{
-    AgoraRtcEngine.leaveChannel();
-    AgoraRtcEngine.destroy();
   }
 
   Future<void> _initAgoraRtcEngine() async {
