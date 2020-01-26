@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:test_clone/Screen/callscreens/call_page.dart';
+import 'package:test_clone/Screen/home_screen.dart';
+import 'package:test_clone/resources/firebase_repository.dart';
 
 class IncomingCallPage extends StatefulWidget {
 
@@ -13,6 +15,13 @@ class IncomingCallPage extends StatefulWidget {
 }
 
 class _IncomingCallPageState extends State<IncomingCallPage> {
+
+  FirebaseRepository _repository = FirebaseRepository();
+
+  void dispose(){
+    _repository.deleteChannelName(widget.channelName);
+    super.dispose();
+  }
 
   Future<void> _handleCameraAndMic() async {
     await PermissionHandler().requestPermissions(
@@ -31,7 +40,13 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
         children: <Widget>[
           RawMaterialButton(
             onPressed: () {
-              Navigator.pop(context);
+              _repository.deleteChannelName(widget.channelName);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen()
+                ),
+              );
             },
             child: Icon(
               Icons.call_end,
@@ -72,9 +87,14 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: _toolbar(),
+    return WillPopScope(
+      onWillPop: ()async {
+        if (Navigator.of(context).userGestureInProgress)
+          return false;
+        else
+          return true;
+      },
+      child: _toolbar(),
     );
   }
 }

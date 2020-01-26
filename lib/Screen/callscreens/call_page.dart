@@ -30,6 +30,7 @@ class _CallPageState extends State<CallPage> {
     // destroy sdk
     AgoraRtcEngine.leaveChannel();
     AgoraRtcEngine.destroy();
+    _repository.deleteChannelName(widget.channelName);
     super.dispose();
   }
 
@@ -109,7 +110,6 @@ class _CallPageState extends State<CallPage> {
   }
 
   Future<void> _onCallEnd(BuildContext context) async {
-    _repository.deleteChannelName(widget.channelName);
     Navigator.pop(context);
   }
 
@@ -146,32 +146,38 @@ class _CallPageState extends State<CallPage> {
       case 1:
         return Container(
             child: Column(
-          children: <Widget>[_videoView(views[0])],
-        ));
+              children: <Widget>[
+                _videoView(views[0]),
+              ],
+            ),
+        );
       case 2:
         return Container(
             child: Column(
-          children: <Widget>[
-            _expandedVideoRow([views[0]]),
-            _expandedVideoRow([views[1]])
-          ],
-        ));
+              children: <Widget>[
+                _expandedVideoRow([views[0]]),
+                _expandedVideoRow([views[1]])
+              ],
+            )
+        );
       case 3:
         return Container(
             child: Column(
-          children: <Widget>[
-            _expandedVideoRow(views.sublist(0, 2)),
-            _expandedVideoRow(views.sublist(2, 3))
-          ],
-        ));
+              children: <Widget>[
+                _expandedVideoRow(views.sublist(0, 2)),
+                _expandedVideoRow(views.sublist(2, 3))
+              ],
+            )
+        );
       case 4:
         return Container(
             child: Column(
-          children: <Widget>[
-            _expandedVideoRow(views.sublist(0, 2)),
-            _expandedVideoRow(views.sublist(2, 4))
-          ],
-        ));
+              children: <Widget>[
+                _expandedVideoRow(views.sublist(0, 2)),
+                _expandedVideoRow(views.sublist(2, 4))
+              ],
+            )
+        );
       default:
     }
     return Container();
@@ -278,20 +284,20 @@ class _CallPageState extends State<CallPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Call Page'),
-      ),
-      backgroundColor: Colors.black,
-      body: Center(
-        child: Stack(
-          children: <Widget>[
-            _viewRows(),
-            _panel(),
-            _toolbar(),
-          ],
-        ),
+  Widget build(BuildContext context) {    
+    return WillPopScope(
+      onWillPop: ()async {
+        if (Navigator.of(context).userGestureInProgress)
+          return false;
+        else
+          return true;
+      },
+      child: Stack(
+        children: <Widget>[
+          _viewRows(),
+          _panel(),
+          _toolbar(),
+        ],
       ),
     );
   }

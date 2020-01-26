@@ -18,8 +18,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
+
       backgroundColor : UniversalVariables.blackColor,
+      
       body : Stack(
         children : [
           Center(
@@ -29,25 +32,36 @@ class _LoginScreenState extends State<LoginScreen> {
             ? Center(
                 child : CircularProgressIndicator(),
             )
-          :Container()
+            :Container()
         ], 
       ),
+    
     );
   }
 
   Widget loginButton() {
+    
     return Shimmer.fromColors(
+      
       baseColor : Colors.white,
+      
       highlightColor : UniversalVariables.senderColor,
+      
       child: FlatButton(
         padding : EdgeInsets.all(35),
+        
         child : Text(
           "LOGIN",
           style: TextStyle(fontSize : 35, fontWeight : FontWeight.w900, letterSpacing : 1.2),
         ),
-        onPressed : ()=>performLogin(),
+        
+        onPressed : () {
+          performLogin();
+          },
+        
         shape : RoundedRectangleBorder(borderRadius : BorderRadius.circular(10)),
       ),
+    
     );
   }
 
@@ -80,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
             MaterialPageRoute(builder : (context) {
               return HomeScreen();
             })
-        );
+          );
         }); 
       }else{
         Navigator.pushReplacement(context,
