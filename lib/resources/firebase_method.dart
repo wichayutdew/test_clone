@@ -94,4 +94,9 @@ class FirebaseMethod{
   Future<void> deleteChannelName(String channelName) async {
     return await firestore.collection("calls").document(channelName).delete();
   }
+
+  Future<User> getUser(uid) async {
+    QuerySnapshot querySnapshot = await firestore.collection("users").where("uid", isEqualTo : uid).getDocuments();
+    return User.fromMap(querySnapshot.documents[0].data);
+  }
 }

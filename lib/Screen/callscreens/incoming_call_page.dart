@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:test_clone/Screen/callscreens/call_page.dart';
 import 'package:test_clone/Screen/home_screen.dart';
+import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 
 class IncomingCallPage extends StatefulWidget {
 
   final String channelName;
 
-  const IncomingCallPage({Key key, @required this.channelName}) : super(key: key);
+  final String senderId;
+
+  const IncomingCallPage({Key key, @required this.channelName, @required this.senderId}) : super(key: key);
 
   @override
   _IncomingCallPageState createState() => _IncomingCallPageState();
@@ -17,10 +20,22 @@ class IncomingCallPage extends StatefulWidget {
 class _IncomingCallPageState extends State<IncomingCallPage> {
 
   FirebaseRepository _repository = FirebaseRepository();
+  User caller;
 
   void dispose(){
     _repository.deleteChannelName(widget.channelName);
     super.dispose();
+  }
+
+  void initState(){
+    _repository.getUser(widget.senderId).then((user){
+      setState(() {
+        caller = user;
+        print(caller.username);
+        print(caller.profilePhoto);
+      });
+     });
+    super.initState();
   }
 
   Future<void> _handleCameraAndMic() async {
@@ -31,7 +46,6 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
 
     /// Toolbar layout
   Widget _toolbar() {
-    print(widget.channelName);
     return Container(
       alignment: Alignment.bottomCenter,
       padding: const EdgeInsets.symmetric(vertical: 48),

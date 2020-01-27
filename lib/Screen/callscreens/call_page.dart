@@ -294,10 +294,6 @@ class _CallPageState extends State<CallPage> {
           return true;
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Agora Flutter QuickStart'),
-        ),
-        backgroundColor: Colors.black,
         body: Center(
           child: Stack(
             children: <Widget>[

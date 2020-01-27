@@ -24,4 +24,6 @@ class FirebaseRepository{
   Future <void> addChannelName(CallData callData) => _firebaseMethod.addChannelName(callData);
 
   Future <void> deleteChannelName(String channelName) => _firebaseMethod.deleteChannelName(channelName);
+
+  Future<User> getUser(String uid) => _firebaseMethod.getUser(uid);
 }
