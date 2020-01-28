@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:test_clone/Screen/callscreens/incoming_call_page.dart';
 import 'package:test_clone/Screen/pageviews/chat_list_screen.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
@@ -15,8 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-  static const platform = const MethodChannel('samples.flutter.dev/callscreen');
 
   FirebaseRepository _repository = FirebaseRepository();
 

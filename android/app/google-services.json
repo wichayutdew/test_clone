@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "165074784793-qq54uumftf37kipuenai1c89ahf7ak69.apps.googleusercontent.com",
+          "client_id": "165074784793-cnb39stmpu71k8t2hq5l7jta3oom5j3m.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.test_clone",
-            "certificate_hash": "e2cabc5e73453e2fb39d85d361537ace39032555"
+            "certificate_hash": "8d8d28a4473cb50bf80e6bd8d2e0aab2734808e2"
           }
         },
         {
@@ -36,8 +36,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "165074784793-q35rul3kq9111lenjmfj5qn0aokctau7.apps.googleusercontent.com",
+              "client_id": "165074784793-ukmf1ekg1u4mvuh9e4lg3l7769b5mqol.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "165074784793-0qmg5f5m6mu50oti88r30c2bass584v1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.careNowFrontendV1"
+              }
             }
           ]
         }
