@@ -161,24 +161,24 @@ class _CallPageState extends State<CallPage> {
               ]
             )
         );
-      case 3:
-        return Container(
-            child: Column(
-              children: <Widget>[
-                _expandedVideoRow(views.sublist(0, 2)),
-                _expandedVideoRow(views.sublist(2, 3))
-              ]
-            )
-        );
-      case 4:
-        return Container(
-            child: Column(
-              children: <Widget>[
-                _expandedVideoRow(views.sublist(0, 2)),
-                _expandedVideoRow(views.sublist(2, 4))
-              ]
-            )
-        );
+      // case 3:
+      //   return Container(
+      //       child: Column(
+      //         children: <Widget>[
+      //           _expandedVideoRow(views.sublist(0, 2)),
+      //           _expandedVideoRow(views.sublist(2, 3))
+      //         ]
+      //       )
+      //   );
+      // case 4:
+      //   return Container(
+      //       child: Column(
+      //         children: <Widget>[
+      //           _expandedVideoRow(views.sublist(0, 2)),
+      //           _expandedVideoRow(views.sublist(2, 4))
+      //         ]
+      //       )
+      //   );
       default:
     }
     return Container();
