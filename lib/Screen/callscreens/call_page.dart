@@ -52,11 +52,12 @@ class _CallPageState extends State<CallPage> {
     await AgoraRtcEngine.joinChannel(null,channelName,null,0);
   }
 
-  Future<void> _addAgoraEventHandlers() async {
+  void _addAgoraEventHandlers() {
     AgoraRtcEngine.onError = (dynamic code) {
+      setState(() {
         final info = 'onError: $code';
-        print(info);
-        // _infoStrings.add(info);
+        _infoStrings.add(info);
+      });
     };
 
     AgoraRtcEngine.onJoinChannelSuccess = (
@@ -64,25 +65,33 @@ class _CallPageState extends State<CallPage> {
       int uid,
       int elapsed,
     ) {
+      setState(() {
         final info = 'onJoinChannel: $channel, uid: $uid';
         _infoStrings.add(info);
+      });
     };
 
     AgoraRtcEngine.onLeaveChannel = () {
+      setState(() {
         _infoStrings.add('onLeaveChannel');
         _users.clear();
+      });
     };
 
     AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
+      setState(() {
         final info = 'userJoined: $uid';
         _infoStrings.add(info);
         _users.add(uid);
+      });
     };
 
     AgoraRtcEngine.onUserOffline = (int uid, int reason) {
+      setState(() {
         final info = 'userOffline: $uid';
         _infoStrings.add(info);
         _users.remove(uid);
+      });
     };
 
     AgoraRtcEngine.onFirstRemoteVideoFrame = (
@@ -91,8 +100,10 @@ class _CallPageState extends State<CallPage> {
       int height,
       int elapsed,
     ) {
-      final info = 'firstRemoteVideo: $uid ${width}x $height';
-      _infoStrings.add(info);
+      setState(() {
+        final info = 'firstRemoteVideo: $uid ${width}x $height';
+        _infoStrings.add(info);
+      });
     };
   }
 
@@ -102,7 +113,9 @@ class _CallPageState extends State<CallPage> {
   }
 
   Future<void> _onToggleMute() async {
+    setState(() {
       muted = !muted;
+    });
     AgoraRtcEngine.muteLocalAudioStream(muted);
   }
 
