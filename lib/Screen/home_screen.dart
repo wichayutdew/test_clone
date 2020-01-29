@@ -5,6 +5,7 @@ import 'package:test_clone/Screen/callscreens/incoming_call_page.dart';
 import 'package:test_clone/Screen/pageviews/chat_list_screen.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/utils/universal_variables.dart';
+import 'package:test_clone/widgets/notification_widget.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -16,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   FirebaseRepository _repository = FirebaseRepository();
+  NotificationWidget _notificationWidget = NotificationWidget();
 
   PageController pageController;
   int _page = 0;
@@ -27,6 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
     pageController = PageController();
     _repository.getCurrentUser().then((user){
       _currentUserId = user.uid;
+      _notificationWidget.registerNotification(user.uid);
+      _notificationWidget.configLocalNotification();
     });
   }
 

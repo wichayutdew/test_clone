@@ -30,17 +30,15 @@ class NotificationWidget{
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print('onMessage: $message');
-        showNotification(message['notification']);
+        // showNotification(message['notification']);
         return;
       },
       onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
       onResume: (Map<String, dynamic> message) {
         print('onResume: $message');
-        showNotification(message['notification']);
         return;
       }, onLaunch: (Map<String, dynamic> message) {
         print('onLaunch: $message');
-        showNotification(message['notification']);
         return;
     });
 

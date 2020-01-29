@@ -29,8 +29,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
         currentUserid = user.uid;
         initials =  Utils.getInitials(user.displayName);
       });
-      _notificationWidget.registerNotification(user.uid);
-      _notificationWidget.configLocalNotification();
       Firestore.instance.collection('users').document(user.uid).updateData({'chatWith': ''});
     });
   }
