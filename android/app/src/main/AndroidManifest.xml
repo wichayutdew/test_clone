@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
-        android:name="com.example.test_clone.Application"
+        android:name=".Application"
         android:label="test_clone"
         android:icon="@mipmap/ic_launcher">
         <activity

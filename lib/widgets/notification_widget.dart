@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 
@@ -24,7 +25,10 @@ class NotificationWidget{
     // Or do other work.
   }
 
- void registerNotification(currentUserId) {
+  void registerNotification(currentUserId) {
+
+    startServiceInPlatform();
+
     firebaseMessaging.requestNotificationPermissions();
 
     firebaseMessaging.configure(
@@ -43,16 +47,25 @@ class NotificationWidget{
     });
 
     firebaseMessaging.getToken().then((token) {
-      print('token = $token');
       Firestore.instance.collection('users').document(currentUserId).updateData({'pushToken': token});
     });
- }
+  }
+
+  void startServiceInPlatform() async {
+    if(Platform.isAndroid){
+      var methodChannel = MethodChannel("com.example.test_clone");
+      String data = await methodChannel.invokeMethod("onMessageReceived");
+      print(data);
+    }
+  }
+  
   void configLocalNotification() {
     var initializationSettingsAndroid = new AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
+  
   void showNotification(message) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
       'your channel id', 'your channel name', 'your channel description',
@@ -68,6 +81,7 @@ class NotificationWidget{
         0, message['title'].toString(), message['body'].toString(), platformChannelSpecifics,
         payload: json.encode(message));
   }
+  
   void showNotification2() async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
       'your channel id', 'your channel name', 'your channel description',

@@ -1,6 +1,5 @@
 package com.example.test_clone
 
-import android.annotation.SuppressLint
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -12,7 +11,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 
 
-class MyFirebaseMessagingService : FirebaseMessagingService() {
+object MyFirebaseMessagingService : FirebaseMessagingService() {
     val TAG = "FirebaseMessagingService"
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -24,10 +23,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun showNotification(title: String?, body: String?) {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT)
+    //    val intent = Intent(this, MainActivity::class.java)
+    //    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    //    val pendingIntent = PendingIntent.getActivity(this, 0, intent,
+    //            PendingIntent.FLAG_ONE_SHOT)
 
         val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this)
@@ -36,7 +35,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setContentText(body)
                 .setAutoCancel(true)
                 .setSound(soundUri)
-                .setContentIntent(pendingIntent)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(0, notificationBuilder.build())
