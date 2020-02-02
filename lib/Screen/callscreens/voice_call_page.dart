@@ -4,17 +4,17 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 
-class CallPage extends StatefulWidget {
+class VoiceCallPage extends StatefulWidget {
     /// non-modifiable channel name of the page
   final String channelName;
   /// Creates a call page with given channel name.
-  const CallPage({Key key, @required this.channelName}) : super(key: key);
+  const VoiceCallPage({Key key, @required this.channelName}) : super(key: key);
 
   @override
-  _CallPageState createState() => new _CallPageState();
+  _VoiceCallPageState createState() => new _VoiceCallPageState();
 }
 
-class _CallPageState extends State<CallPage> {
+class _VoiceCallPageState extends State<VoiceCallPage> {
 
   FirebaseRepository _repository = FirebaseRepository();
 
@@ -22,6 +22,7 @@ class _CallPageState extends State<CallPage> {
   static final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
+  bool speaker = false;
 
   @override
   void dispose() {
@@ -93,23 +94,10 @@ class _CallPageState extends State<CallPage> {
         _users.remove(uid);
       });
     };
-
-    AgoraRtcEngine.onFirstRemoteVideoFrame = (
-      int uid,
-      int width,
-      int height,
-      int elapsed,
-    ) {
-      setState(() {
-        final info = 'firstRemoteVideo: $uid ${width}x $height';
-        _infoStrings.add(info);
-      });
-    };
   }
 
   Future<void> _initAgoraRtcEngine() async {
     await AgoraRtcEngine.create(APP_ID);
-    await AgoraRtcEngine.enableVideo();
   }
 
   Future<void> _onToggleMute() async {
@@ -119,84 +107,16 @@ class _CallPageState extends State<CallPage> {
     AgoraRtcEngine.muteLocalAudioStream(muted);
   }
 
-  Future<void> _onSwitchCamera() async {
-    AgoraRtcEngine.switchCamera();
+  Future<void> _onToggleSpeaker() async {
+    setState(() {
+      speaker = !speaker;
+    });
+    AgoraRtcEngine.setEnableSpeakerphone(speaker);
   }
 
   Future<void> _onCallEnd(BuildContext context) async {
     Navigator.pop(context);
   }
-
-
-
-  /// Helper function to get list of native views
-  List<Widget> _getRenderViews() {
-    final List<AgoraRenderWidget> list = [
-      AgoraRenderWidget(0, local: true, preview: true),
-    ];
-    _users.forEach((int uid) => list.add(AgoraRenderWidget(uid)));
-    return list;
-  }
-
-  /// Video view wrapper
-  Widget _videoView(view) {
-    return Expanded(child: Container(child: view));
-  }
-
-  /// Video view row wrapper
-  Widget _expandedVideoRow(List<Widget> views) {
-    final wrappedViews = views.map<Widget>(_videoView).toList();
-    return Expanded(
-      child: Row(
-        children: wrappedViews,
-      ),
-    );
-  }
-
-  /// Video layout wrapper
-  Widget _viewRows() {
-    final views = _getRenderViews();
-    switch (views.length) {
-      case 1:
-        return Container(
-            child: Column(
-              children: <Widget>[
-                _videoView(views[0])
-              ]
-            )
-        );
-      case 2:
-        return Container(
-            child: Column(
-              children: <Widget>[
-                _expandedVideoRow([views[0]]),
-                _expandedVideoRow([views[1]])
-              ]
-            )
-        );
-      // case 3:
-      //   return Container(
-      //       child: Column(
-      //         children: <Widget>[
-      //           _expandedVideoRow(views.sublist(0, 2)),
-      //           _expandedVideoRow(views.sublist(2, 3))
-      //         ]
-      //       )
-      //   );
-      // case 4:
-      //   return Container(
-      //       child: Column(
-      //         children: <Widget>[
-      //           _expandedVideoRow(views.sublist(0, 2)),
-      //           _expandedVideoRow(views.sublist(2, 4))
-      //         ]
-      //       )
-      //   );
-      default:
-    }
-    return Container();
-  }
-
 
    /// Info panel to show logs
   Widget _panel() {
@@ -257,7 +177,7 @@ class _CallPageState extends State<CallPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           RawMaterialButton(
-            onPressed: _onToggleMute,
+            onPressed: () => {_onToggleMute()},
             child: Icon(
               muted ? Icons.mic : Icons.mic_off,
               color: muted ? Colors.white : Colors.blueAccent,
@@ -281,15 +201,15 @@ class _CallPageState extends State<CallPage> {
             padding: const EdgeInsets.all(15.0),
           ),
           RawMaterialButton(
-            onPressed: _onSwitchCamera,
+            onPressed:() => {_onToggleSpeaker()},
             child: Icon(
-              Icons.switch_camera,
+              Icons.volume_up,
               color: Colors.blueAccent,
               size: 20.0,
             ),
             shape: CircleBorder(),
             elevation: 2.0,
-            fillColor: Colors.white,
+            fillColor: muted ? Colors.blueAccent : Colors.white,
             padding: const EdgeInsets.all(12.0),
           )
         ],
@@ -307,10 +227,10 @@ class _CallPageState extends State<CallPage> {
           return true;
       },
       child: Scaffold(
+        backgroundColor: Colors.black,
         body: Center(
           child: Stack(
             children: <Widget>[
-              _viewRows(),
               _panel(),
               _toolbar(),
             ],

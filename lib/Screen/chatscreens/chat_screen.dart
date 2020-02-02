@@ -6,10 +6,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:test_clone/Screen/callscreens/video_call_page.dart';
+import 'package:test_clone/Screen/callscreens/voice_call_page.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:test_clone/models/call.dart';
-import 'package:test_clone/Screen/callscreens/call_page.dart';
 import 'package:test_clone/Screen/chatscreens/full_picture.dart';
 import 'package:test_clone/models/message.dart';
 import 'package:test_clone/models/user.dart';
@@ -475,12 +476,19 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  uploadCallData(channelName){
+  Future<void> _handleMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.microphone],
+    );
+  }
+
+  uploadCallData(String channelName, String type){
     CallData _callData = CallData(
       receiverId : widget.receiver.uid,
       senderId : sender.uid,
       channelName: channelName,
-      timestamp: FieldValue.serverTimestamp(),
+      type: type,
+      timestamp: Timestamp.now(),
     );
     _repository.addChannelName(_callData);
   }
@@ -508,11 +516,11 @@ class _ChatScreenState extends State<ChatScreen> {
           onPressed: () {
             _handleCameraAndMic();
             String channelName = uuid.v1();
-            uploadCallData(channelName);
+            uploadCallData(channelName, "video");
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CallPage(
+                builder: (context) => VideoCallPage(
                   channelName: channelName,
                 ),
               ),
@@ -523,7 +531,19 @@ class _ChatScreenState extends State<ChatScreen> {
           icon: Icon(
             Icons.phone,
           ),
-          onPressed: () {},
+          onPressed: () {
+            _handleMic();
+            String channelName = uuid.v1();
+            uploadCallData(channelName, "voice");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VoiceCallPage(
+                  channelName: channelName,
+                ),
+              ),
+            );
+          },
         )
       ],
     );

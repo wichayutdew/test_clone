@@ -27,14 +27,14 @@ class NotificationWidget{
 
   void registerNotification(currentUserId) {
 
-    startServiceInPlatform();
+    // startServiceInPlatform();
 
     firebaseMessaging.requestNotificationPermissions();
 
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print('onMessage: $message');
-        // showNotification(message['notification']);
+        showNotification(message['notification']);
         return;
       },
       onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
@@ -51,13 +51,13 @@ class NotificationWidget{
     });
   }
 
-  void startServiceInPlatform() async {
-    if(Platform.isAndroid){
-      var methodChannel = MethodChannel("com.example.test_clone");
-      String data = await methodChannel.invokeMethod("onMessageReceived");
-      print(data);
-    }
-  }
+  // void startServiceInPlatform() async {
+  //   if(Platform.isAndroid){
+  //     var methodChannel = MethodChannel("com.example.test_clone");
+  //     String data = await methodChannel.invokeMethod("onMessageReceived");
+  //     print(data);
+  //   }
+  // }
   
   void configLocalNotification() {
     var initializationSettingsAndroid = new AndroidInitializationSettings('@mipmap/ic_launcher');

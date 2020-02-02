@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (snapshot.data.documents.length != 0){
           DocumentSnapshot snapData = snapshot.data.documents[0];
           return Scaffold(
-            body : IncomingCallPage(channelName: snapData['channelName'], senderId: snapData['senderId'],),
+            body : IncomingCallPage(channelName: snapData['channelName'],type : snapData['type'], senderId: snapData['senderId'],),
           );
         }
 

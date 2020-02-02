@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:test_clone/Screen/callscreens/call_page.dart';
+import 'package:test_clone/Screen/callscreens/video_call_page.dart';
+import 'package:test_clone/Screen/callscreens/voice_call_page.dart';
 import 'package:test_clone/Screen/home_screen.dart';
 import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
@@ -8,10 +9,11 @@ import 'package:test_clone/resources/firebase_repository.dart';
 class IncomingCallPage extends StatefulWidget {
 
   final String channelName;
+  final String type;
 
   final String senderId;
 
-  const IncomingCallPage({Key key, @required this.channelName, @required this.senderId}) : super(key: key);
+  const IncomingCallPage({Key key, @required this.channelName, @required this.type, @required this.senderId}) : super(key: key);
 
   @override
   _IncomingCallPageState createState() => _IncomingCallPageState();
@@ -20,22 +22,11 @@ class IncomingCallPage extends StatefulWidget {
 class _IncomingCallPageState extends State<IncomingCallPage> {
 
   FirebaseRepository _repository = FirebaseRepository();
-  User caller;
+  User caller = User();
 
   void dispose(){
     _repository.deleteChannelName(widget.channelName);
     super.dispose();
-  }
-
-  void initState(){
-    _repository.getUser(widget.senderId).then((user){
-      setState(() {
-        caller = user;
-        print(caller.username);
-        print(caller.profilePhoto);
-      });
-     });
-    super.initState();
   }
 
   Future<void> _handleCameraAndMic() async {
@@ -44,7 +35,44 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
     );
   }
 
-    /// Toolbar layout
+  Future<void> _handleMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.microphone],
+    );
+  }
+
+
+  // Widget _caller(){
+  //   return FutureBuilder(
+  //     future : _repository.getUser(widget.senderId),
+  //     builder : (context, snapshot){
+  //       if(snapshot.hasData){
+  //         return Container(
+  //           alignment: Alignment.center,
+  //           child: Row(
+  //             children: <Widget>[
+  //               Text(
+  //                 snapshot.data.username,
+  //                 style: TextStyle(
+  //                     fontWeight: FontWeight.w900,
+  //                     fontSize: 20),
+  //               ),
+  //               CircleAvatar(
+  //                 maxRadius : 20,
+  //                 backgroundColor: Colors.grey,
+  //                 backgroundImage: NetworkImage(snapshot.data.profilePhoto),
+  //               )
+  //             ],
+  //             ),
+  //           );
+  //       }else{
+  //         return Container();
+  //       }
+  //     },
+  //   );
+  // }
+
+  /// Toolbar layout
   Widget _toolbar() {
     return Container(
       alignment: Alignment.bottomCenter,
@@ -74,15 +102,27 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
           ),
           RawMaterialButton(
             onPressed: () {
-              _handleCameraAndMic();
-              Navigator.push(
+              if(widget.type == 'video'){
+                _handleCameraAndMic();
+                Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => CallPage(
-                    channelName: widget.channelName,
+                  MaterialPageRoute(
+                    builder: (context) => VideoCallPage(
+                      channelName: widget.channelName,
+                    ),
                   ),
-                ),
-              );
+                );
+              }else if (widget.type == 'voice'){
+                _handleMic();
+                Navigator.push(
+                context,
+                  MaterialPageRoute(
+                    builder: (context) => VoiceCallPage(
+                      channelName: widget.channelName,
+                    ),
+                  ),
+                );
+              }
             },
             child: Icon(
               Icons.call,
@@ -108,7 +148,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
         else
           return true;
       },
-      child: _toolbar(),
+      child: _toolbar()
     );
   }
 }
