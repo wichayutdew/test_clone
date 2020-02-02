@@ -6,9 +6,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:test_clone/models/call.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:test_clone/models/call.dart';
 import 'package:test_clone/Screen/callscreens/call_page.dart';
 import 'package:test_clone/Screen/chatscreens/full_picture.dart';
 import 'package:test_clone/models/message.dart';
@@ -103,28 +103,30 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget chatMessageItem(DocumentSnapshot snapshot) {
+    Message _message = Message.fromMap(snapshot.data);
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 15),
       child: Container(
-        alignment: snapshot['senderId'] == _currentUserId ? Alignment.centerRight : Alignment.centerLeft,
-        child: snapshot['senderId'] == _currentUserId ? senderLayout(snapshot) : receiverLayout(snapshot),
+        alignment: _message.senderId == _currentUserId ? Alignment.centerRight : Alignment.centerLeft,
+        child: _message.senderId == _currentUserId ? senderLayout(_message) : receiverLayout(_message),
       ),
     );
   }
 
-  getMessage(DocumentSnapshot snapshot){
+  getMessage(Message message){
     return Text(
-      snapshot['message'],
+      message.message,
       style: TextStyle(
         color: Colors.white,
         fontSize: 16.0,),
     );
   }
 
-  Widget senderLayout(DocumentSnapshot snapshot) {
+  Widget senderLayout(Message message) {
     Radius messageRadius = Radius.circular(10);
     Container _container = new Container();
-    if(snapshot['type']=='text'){
+    if(message.type =='text'){
       _container = Container(
         margin: EdgeInsets.only(top: 12),
         constraints:
@@ -139,10 +141,10 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         child: Padding(
           padding: EdgeInsets.all(10),
-          child: getMessage(snapshot),
+          child: getMessage(message),
         ),
       );
-    }else if(snapshot['type']=='image'){
+    }else if(message.type == 'image'){
       _container = Container(
         child: FlatButton(
           child: Material(
@@ -173,7 +175,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 clipBehavior: Clip.hardEdge,
               ),
-              imageUrl: snapshot['message'],
+              imageUrl: message.message,
               width: 200.0,
               height: 200.0,
               fit: BoxFit.cover,
@@ -183,7 +185,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           onPressed: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => FullPhoto(url: snapshot['message'])));
+                context, MaterialPageRoute(builder: (context) => FullPhoto(url: message.message)));
           },
           padding: EdgeInsets.all(0),
         )
@@ -192,10 +194,10 @@ class _ChatScreenState extends State<ChatScreen> {
     return _container;
   }
 
-  Widget receiverLayout(DocumentSnapshot snapshot) {
+  Widget receiverLayout(Message message) {
     Radius messageRadius = Radius.circular(10);
     Container _container = new Container();
-    if(snapshot['type'] == 'text'){
+    if(message.type == 'text'){
       _container = Container(
         margin: EdgeInsets.only(top: 12),
         constraints:
@@ -210,10 +212,10 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         child: Padding(
           padding: EdgeInsets.all(10),
-          child: getMessage(snapshot),
+          child: getMessage(message),
         ),
       );
-    }else if(snapshot['type']=='image'){
+    }else if(message.type == 'image'){
       _container = Container(
         child: FlatButton(
           child: Material(
@@ -244,7 +246,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 clipBehavior: Clip.hardEdge,
               ),
-              imageUrl: snapshot['message'],
+              imageUrl: message.message,
               width: 200.0,
               height: 200.0,
               fit: BoxFit.cover,
@@ -254,7 +256,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           onPressed: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => FullPhoto(url: snapshot['message'])));
+                context, MaterialPageRoute(builder: (context) => FullPhoto(url: message.message)));
           },
           padding: EdgeInsets.all(0),
         )
@@ -422,7 +424,7 @@ class _ChatScreenState extends State<ChatScreen> {
         receiverId : widget.receiver.uid,
         senderId : sender.uid,
         message: content,
-        timestamp: FieldValue.serverTimestamp(),
+        timestamp: Timestamp.now(),
         type:'text',
       );
       textFieldController.clear();
@@ -431,7 +433,7 @@ class _ChatScreenState extends State<ChatScreen> {
         receiverId : widget.receiver.uid,
         senderId : sender.uid,
         message: content,
-        timestamp: FieldValue.serverTimestamp(),
+        timestamp: Timestamp.now(),
         type:'image',
       );
     }

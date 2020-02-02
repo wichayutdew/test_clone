@@ -17,12 +17,10 @@ class CallData {
     return map;
   }
 
-  CallData fromMap(Map<String, dynamic> map) {
-    CallData _calldata = CallData();
-    _calldata.senderId = map['senderId'];
-    _calldata.receiverId = map['receiverId'];
-    _calldata.channelName = map['channelName'];
-    _calldata.timestamp = map['timestamp'];
-    return _calldata;
+  CallData.fromMap(Map<String, dynamic> map) {
+    this.senderId = map['senderId'];
+    this.receiverId = map['receiverId'];
+    this.channelName = map['channelName'];
+    this.timestamp = map['timestamp'];
   }
 }
