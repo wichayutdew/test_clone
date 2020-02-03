@@ -42,35 +42,35 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
   }
 
 
-  // Widget _caller(){
-  //   return FutureBuilder(
-  //     future : _repository.getUser(widget.senderId),
-  //     builder : (context, snapshot){
-  //       if(snapshot.hasData){
-  //         return Container(
-  //           alignment: Alignment.center,
-  //           child: Row(
-  //             children: <Widget>[
-  //               Text(
-  //                 snapshot.data.username,
-  //                 style: TextStyle(
-  //                     fontWeight: FontWeight.w900,
-  //                     fontSize: 20),
-  //               ),
-  //               CircleAvatar(
-  //                 maxRadius : 20,
-  //                 backgroundColor: Colors.grey,
-  //                 backgroundImage: NetworkImage(snapshot.data.profilePhoto),
-  //               )
-  //             ],
-  //             ),
-  //           );
-  //       }else{
-  //         return Container();
-  //       }
-  //     },
-  //   );
-  // }
+  Widget _caller(){
+    return FutureBuilder(
+      future : _repository.getUser(widget.senderId),
+      builder : (context, snapshot){
+        if(snapshot.hasData){
+          return Container(
+            alignment: Alignment.center,
+            child: Row(
+              children: <Widget>[
+                Text(
+                  snapshot.data.username,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 20),
+                ),
+                CircleAvatar(
+                  maxRadius : 20,
+                  backgroundColor: Colors.grey,
+                  backgroundImage: NetworkImage(snapshot.data.profilePhoto),
+                )
+              ],
+              ),
+            );
+        }else{
+          return Container();
+        }
+      },
+    );
+  }
 
   /// Toolbar layout
   Widget _toolbar() {
@@ -148,7 +148,12 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
         else
           return true;
       },
-      child: _toolbar()
+      child: Stack(
+        children: <Widget>[
+          _caller(),
+          _toolbar()
+        ],
+      )
     );
   }
 }

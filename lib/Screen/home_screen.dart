@@ -16,8 +16,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  
-
   FirebaseRepository _repository = FirebaseRepository();
   NotificationWidget _notificationWidget = NotificationWidget();
 
@@ -54,13 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return StreamBuilder(
       stream: Firestore.instance.collection("calls").where("receiverId", isEqualTo : _currentUserId).snapshots(),
       builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
-        if (snapshot.data.documents.length != 0){
-          DocumentSnapshot snapData = snapshot.data.documents[0];
-          return Scaffold(
-            body : IncomingCallPage(channelName: snapData['channelName'],type : snapData['type'], senderId: snapData['senderId'],),
-          );
+        if(snapshot.data != null){
+          if (snapshot.data.documents.length != 0){
+            DocumentSnapshot snapData = snapshot.data.documents[0];
+            return Scaffold(
+              body : IncomingCallPage(channelName: snapData['channelName'],type : snapData['type'], senderId: snapData['senderId'],),
+            );
+          }
         }
-
         return Scaffold(
       
           backgroundColor :  UniversalVariables.blackColor,

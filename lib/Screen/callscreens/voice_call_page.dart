@@ -203,13 +203,13 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
           RawMaterialButton(
             onPressed:() => {_onToggleSpeaker()},
             child: Icon(
-              Icons.volume_up,
-              color: Colors.blueAccent,
+              speaker ? Icons.volume_mute : Icons.volume_up,
+              color: speaker ? Colors.white : Colors.blueAccent,
               size: 20.0,
             ),
             shape: CircleBorder(),
             elevation: 2.0,
-            fillColor: muted ? Colors.blueAccent : Colors.white,
+            fillColor: speaker ? Colors.blueAccent : Colors.white,
             padding: const EdgeInsets.all(12.0),
           )
         ],
