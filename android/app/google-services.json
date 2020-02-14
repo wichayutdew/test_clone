@@ -8,6 +8,50 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:165074784793:android:14fc97ee6bbe0458395088",
+        "android_client_info": {
+          "package_name": "com.example.care_now_frontend_v1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "165074784793-5qde9vnl738l3jhc6d76qlfvrou394s6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.care_now_frontend_v1",
+            "certificate_hash": "8d8d28a4473cb50bf80e6bd8d2e0aab2734808e2"
+          }
+        },
+        {
+          "client_id": "165074784793-q35rul3kq9111lenjmfj5qn0aokctau7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_JuF_r2sBNGa7vkjptfu2ohJJ-1R0QhA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "165074784793-ukmf1ekg1u4mvuh9e4lg3l7769b5mqol.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "165074784793-0qmg5f5m6mu50oti88r30c2bass584v1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.careNowFrontendV1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:165074784793:android:a3280e4ff822a955395088",
         "android_client_info": {
           "package_name": "com.example.test_clone"
@@ -15,11 +59,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "165074784793-cnb39stmpu71k8t2hq5l7jta3oom5j3m.apps.googleusercontent.com",
+          "client_id": "165074784793-43mnodc43gfdht1d7s5o469pan92icn3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.test_clone",
-            "certificate_hash": "8d8d28a4473cb50bf80e6bd8d2e0aab2734808e2"
+            "certificate_hash": "1a79714dde2fcaca29c2949097dabb428055ea61"
           }
         },
         {
