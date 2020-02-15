@@ -33,7 +33,11 @@ class NotificationWidget{
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print('onMessage: $message');
+        // if (Platform.isIOS){
+        //   showNotification(message['aps']['alert']);
+        // }else{
         showNotification(message['notification']);
+        // }
         return;
       },
       onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,

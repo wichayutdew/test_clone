@@ -46,7 +46,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
     await AgoraRtcEngine.enableWebSdkInteroperability(true);
-    AgoraRtcEngine.setParameters("{\"rtc.log_filter\": 65535}");
+    // AgoraRtcEngine.setParameters("{\"rtc.log_filter\": 65535}");
     await AgoraRtcEngine.setParameters(
         '''{\"che.video.lowBitRateStreamParameter\":{\"width\":320,\"height\":180,\"frameRate\":15,\"bitRate\":140}}''');
     await AgoraRtcEngine.joinChannel(null,channelName,null,0);
@@ -174,24 +174,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
               ]
             )
         );
-      // case 3:
-      //   return Container(
-      //       child: Column(
-      //         children: <Widget>[
-      //           _expandedVideoRow(views.sublist(0, 2)),
-      //           _expandedVideoRow(views.sublist(2, 3))
-      //         ]
-      //       )
-      //   );
-      // case 4:
-      //   return Container(
-      //       child: Column(
-      //         children: <Widget>[
-      //           _expandedVideoRow(views.sublist(0, 2)),
-      //           _expandedVideoRow(views.sublist(2, 4))
-      //         ]
-      //       )
-      //   );
       default:
     }
     return Container();
