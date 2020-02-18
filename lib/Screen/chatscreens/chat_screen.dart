@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:test_clone/Screen/callscreens/video_call_page.dart';
 import 'package:test_clone/Screen/callscreens/voice_call_page.dart';
+import 'package:test_clone/widgets/ios_call_screen.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:test_clone/models/call.dart';
@@ -33,6 +34,7 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController textFieldController = TextEditingController();
   FirebaseRepository _repository = FirebaseRepository();
   ScrollController _controller = ScrollController();
+  CallScreenWidget _callScreenWidget = CallScreenWidget();
   Uuid uuid = Uuid();
 
   User sender;
@@ -491,6 +493,7 @@ class _ChatScreenState extends State<ChatScreen> {
       timestamp: Timestamp.now(),
     );
     _repository.addChannelName(_callData);
+    _callScreenWidget.startCall(channelName, 'dew10170@hotmail.com', _currentUserId);
   }
 
 

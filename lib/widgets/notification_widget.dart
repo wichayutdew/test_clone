@@ -4,12 +4,14 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:test_clone/widgets/ios_call_screen.dart';
 
 
 
 class NotificationWidget{
   final FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+  final CallScreenWidget _callScreenWidget = new CallScreenWidget();
 
   static Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
     // if (message.containsKey('data')) {
@@ -33,10 +35,21 @@ class NotificationWidget{
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print('onMessage: $message');
-        // if (Platform.isIOS){
-        //   showNotification(message['aps']['alert']);
-        // }else{
+        if(message['data']['type'] == 'call'){
+        _callScreenWidget.displayIncomingCall(message['data']['channelName'], 'dew10170@hotmail.com', message['data']['callerName']);
+        }
         showNotification(message['notification']);
+        // if(Platform.isIOS == true){
+        //   if(message['aps']['data']['type'] == 'call'){
+        //     _callScreenWidget.displayIncomingCall(message['aps']['data']['channelName'], 'dew10170@hotmail.com', message['aps']['data']['callerName']);
+        //   }else{
+        //     showNotification(message['aps']['alert']);
+        //   }
+        // }else{
+        //   if(message['data']['type'] == 'call'){
+        //   }else{
+        //     showNotification(message['notification']);
+        //   }
         // }
         return;
       },
@@ -53,7 +66,7 @@ class NotificationWidget{
       Firestore.instance.collection('users').document(currentUserId).updateData({'pushToken': token});
     });
   }
-
+  
   // void startServiceInPlatform() async {
   //   if(Platform.isAndroid){
   //     var methodChannel = MethodChannel("com.example.test_clone");

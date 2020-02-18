@@ -10,22 +10,21 @@ import android.content.Intent
 
 class MainActivity: FlutterActivity() {
 
-    // override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) { 
-    //     GeneratedPluginRegistrant.registerWith(flutterEngine); 
-    // }
+  // override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) { 
+  //  GeneratedPluginRegistrant.registerWith(flutterEngine); 
+  // }
 
-    // private val CHANNEL = "com.example.test_clone"
+  // private val CHANNEL = "com.example.test_clone"
 
-  	// override fun onCreate(savedInstanceState: Bundle?) {
-    // 	super.onCreate(savedInstanceState)
-    // 	GeneratedPluginRegistrant.registerWith(this)
-
-    // 	MethodChannel(flutterView, CHANNEL).setMethodCallHandler { call, result ->
-    //   		if (call.method == "onMessageReceived") {
-    //             val intent = Intent(this, MyFirebaseMessagingService::class.java)
-    //   			startActivity(intent)
-    //   		}
-    // 	}
-  	// }
+  // override fun onCreate(savedInstanceState: Bundle) {
+  //  super.onCreate(savedInstanceState)
+  //  GeneratedPluginRegistrant.registerWith(this)
+  //  MethodChannel(flutterView, CHANNEL).setMethodCallHandler { call, result ->
+  //    if (call.method == "onMessageReceived") {
+  //      val intent = Intent(this, MyFirebaseMessagingService::class.java)
+  //   	  startActivity(intent)
+  //   	}
+  //  }
+  // }
 
 }
