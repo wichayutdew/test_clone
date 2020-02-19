@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:test_clone/Screen/callscreens/incoming_call_page.dart';
 import 'package:test_clone/Screen/search_screen.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 import 'Screen/home_screen.dart';
@@ -17,27 +18,34 @@ class _MyAppState extends State<MyApp>{
   
   @override
   Widget build(BuildContext context){
-    return MaterialApp(
-      title : "Skype Clone",
-      debugShowCheckedModeBanner: false,
-      initialRoute : "/",
-      routes : {
-        '/search_screen' : (context) => SearchScreen(),
-
+    return GestureDetector(
+      onTap : (){
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
       },
-      theme : ThemeData(
-        brightness : Brightness.dark,
-      ),
-      home : FutureBuilder(
-        future : _repository.getCurrentUser(),
-        builder : (context, AsyncSnapshot<FirebaseUser> snapshot){
-          if(snapshot.hasData){
-            return HomeScreen();
-          }else{
-            return LoginScreen();
-          }
+      child: MaterialApp(
+        title : "Skype Clone",
+        debugShowCheckedModeBanner: false,
+        initialRoute : "/",
+        routes : {
+          '/search_screen' : (context) => SearchScreen(),
         },
-      ),
+        theme : ThemeData(
+          brightness : Brightness.dark,
+        ),
+        home : FutureBuilder(
+          future : _repository.getCurrentUser(),
+          builder : (context, AsyncSnapshot<FirebaseUser> snapshot){
+            if(snapshot.hasData){
+              return HomeScreen();
+            }else{
+              return LoginScreen();
+            }
+          },
+        ),
+      )
     );
   }
 }

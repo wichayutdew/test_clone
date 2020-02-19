@@ -14,16 +14,17 @@ class NotificationWidget{
   final CallScreenWidget _callScreenWidget = new CallScreenWidget();
 
   static Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
-    // if (message.containsKey('data')) {
-    //   // Handle data message
-    //   final dynamic data = message['data'];
-    // }
-
-    // if (message.containsKey('notification')) {
-    //   // Handle notification message
-    //   final dynamic notification = message['notification'];
-    // }
-    // Or do other work.
+    print(message);
+    if (message.containsKey('data')) {
+      // Handle data message
+      final dynamic data = message['data'];
+      print("_backgroundMessageHandler data: $data");
+    }
+    if (message.containsKey('notification')) {
+      // Handle notification message
+      final dynamic notification = message['notification'];
+      print("_backgroundMessageHandler notification: $notification");
+    }
   }
 
   void registerNotification(currentUserId) {
@@ -31,26 +32,15 @@ class NotificationWidget{
     // startServiceInPlatform();
 
     firebaseMessaging.requestNotificationPermissions();
-
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print('onMessage: $message');
-        if(message['data']['type'] == 'call'){
-        _callScreenWidget.displayIncomingCall(message['data']['channelName'], 'dew10170@hotmail.com', message['data']['callerName']);
+        if(message['type'] == 'call'){
+          _callScreenWidget.displayIncomingCall(message['channelName'], 'dew10170@hotmail.com', message['callerName']);
         }
-        showNotification(message['notification']);
-        // if(Platform.isIOS == true){
-        //   if(message['aps']['data']['type'] == 'call'){
-        //     _callScreenWidget.displayIncomingCall(message['aps']['data']['channelName'], 'dew10170@hotmail.com', message['aps']['data']['callerName']);
-        //   }else{
-        //     showNotification(message['aps']['alert']);
-        //   }
-        // }else{
-        //   if(message['data']['type'] == 'call'){
-        //   }else{
-        //     showNotification(message['notification']);
-        //   }
-        // }
+        else{
+          showNotification(message['notification']);
+        }
         return;
       },
       onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
@@ -66,11 +56,12 @@ class NotificationWidget{
       Firestore.instance.collection('users').document(currentUserId).updateData({'pushToken': token});
     });
   }
+
   
   // void startServiceInPlatform() async {
   //   if(Platform.isAndroid){
   //     var methodChannel = MethodChannel("com.example.test_clone");
-  //     String data = await methodChannel.invokeMethod("onMessageReceived");
+  //     String data = await methodChannel.invokeMethod("displayIncomingCall");
   //     print(data);
   //   }
   // }

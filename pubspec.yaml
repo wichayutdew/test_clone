@@ -38,6 +38,7 @@ dependencies:
   cached_network_image: ^2.0.0
   uuid: ^2.0.4
   flutter_call_kit: ^0.0.2
+  flutter_voip_push_notification: ^0.0.3
 
 
 dev_dependencies:
