@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:test_clone/locator.dart';
+import 'package:test_clone/models/call.dart';
+import 'package:test_clone/router.dart';
 import 'package:test_clone/widgets/ios_call_screen.dart';
 
 
@@ -12,6 +15,7 @@ class NotificationWidget{
   final FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
   final CallScreenWidget _callScreenWidget = new CallScreenWidget();
+  final NavigationService _navigation = locator<NavigationService>();
 
   static Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
     print(message);
@@ -19,6 +23,7 @@ class NotificationWidget{
       // Handle data message
       final dynamic data = message['data'];
       print("_backgroundMessageHandler data: $data");
+      
     }
     if (message.containsKey('notification')) {
       // Handle notification message
@@ -35,9 +40,17 @@ class NotificationWidget{
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print('onMessage: $message');
-        if(message['type'] == 'call'){
-          _callScreenWidget.displayIncomingCall(message['channelName'], 'dew10170@hotmail.com', message['callerName']);
+        if(message['notificationType'] == 'call'){
+          IncomingCallData _incomingCallData = IncomingCallData(
+            senderId: message['senderId'],
+            channelName: message['channelName'],
+            type: message['type'],
+          );
+          _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
         }
+        // else if(Platform.isIOS){
+        //   _callScreenWidget.displayIncomingCall(message['channelName'], 'dew10170@hotmail.com', message['callerName']);
+        // }
         else{
           showNotification(message['notification']);
         }

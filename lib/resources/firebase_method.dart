@@ -92,7 +92,8 @@ class FirebaseMethod{
   }
 
   Future<void> deleteChannelName(String channelName) async {
-    return await firestore.collection("calls").document(channelName).delete();
+    // return await firestore.collection("calls").document(channelName).delete();
+    return await firestore.collection("calls").document(channelName).updateData({'status':'terminated'});
   }
 
   Future<User> getUser(uid) async {

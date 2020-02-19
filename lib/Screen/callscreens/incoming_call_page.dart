@@ -3,17 +3,16 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:test_clone/Screen/callscreens/video_call_page.dart';
 import 'package:test_clone/Screen/callscreens/voice_call_page.dart';
 import 'package:test_clone/Screen/home_screen.dart';
+import 'package:test_clone/models/call.dart';
 import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
+import 'package:test_clone/widgets/ios_call_screen.dart';
 
 class IncomingCallPage extends StatefulWidget {
 
-  final String channelName;
-  final String type;
+  final IncomingCallData data;
 
-  final String senderId;
-
-  const IncomingCallPage({Key key, @required this.channelName, @required this.type, @required this.senderId}) : super(key: key);
+  const IncomingCallPage({Key key, @required this.data}) : super(key: key);
 
   @override
   _IncomingCallPageState createState() => _IncomingCallPageState();
@@ -22,10 +21,11 @@ class IncomingCallPage extends StatefulWidget {
 class _IncomingCallPageState extends State<IncomingCallPage> {
 
   FirebaseRepository _repository = FirebaseRepository();
+  CallScreenWidget _callScreenWidget = CallScreenWidget();
   User caller = User();
 
   void dispose(){
-    _repository.deleteChannelName(widget.channelName);
+    _repository.deleteChannelName(widget.data.channelName);
     super.dispose();
   }
 
@@ -44,7 +44,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
 
   Widget _caller(){
     return FutureBuilder(
-      future : _repository.getUser(widget.senderId),
+      future : _repository.getUser(widget.data.senderId),
       builder : (context, snapshot){
         if(snapshot.hasData){
           return Container(
@@ -82,7 +82,8 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
         children: <Widget>[
           RawMaterialButton(
             onPressed: () {
-              _repository.deleteChannelName(widget.channelName);
+              _callScreenWidget.rejectCall(widget.data.channelName);
+              _repository.deleteChannelName(widget.data.channelName);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -102,23 +103,23 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
           ),
           RawMaterialButton(
             onPressed: () {
-              if(widget.type == 'video'){
+              if(widget.data.type == 'video'){
                 _handleCameraAndMic();
                 Navigator.push(
                 context,
                   MaterialPageRoute(
                     builder: (context) => VideoCallPage(
-                      channelName: widget.channelName,
+                      channelName: widget.data.channelName,
                     ),
                   ),
                 );
-              }else if (widget.type == 'voice'){
+              }else if (widget.data.type == 'voice'){
                 _handleMic();
                 Navigator.push(
                 context,
                   MaterialPageRoute(
                     builder: (context) => VoiceCallPage(
-                      channelName: widget.channelName,
+                      channelName: widget.data.channelName,
                     ),
                   ),
                 );

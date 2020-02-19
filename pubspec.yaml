@@ -49,6 +49,9 @@ dependencies:
   # Misc.
   uuid: ^2.0.4
 
+  # Page Navigation
+  get_it: ^3.1.0
+
 
 dev_dependencies:
   flutter_test:

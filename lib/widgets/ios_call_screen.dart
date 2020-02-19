@@ -27,6 +27,16 @@ class CallScreenWidget{
     await _callKit.startCall(uuid, handle, localizedCallerName);
   }
 
+  Future<void> rejectCall(String uuid) async {
+    /// Your normal start call action
+    await _callKit.endCall(uuid);
+  }
+
+  Future<void> endCall(String uuid) async {
+    /// Your normal start call action
+    await _callKit.endCall(uuid);
+  }
+
   Future<void> reportEndCallWithUUID(String uuid, EndReason reason) async {
     await _callKit.reportEndCallWithUUID(uuid, reason);
   }

@@ -12,19 +12,22 @@ class PushKitWidget{
     _voipPush.onTokenRefresh.listen(onToken);
 
     // do configure voip push
-    _voipPush.configure(onMessage: (bool isLocal, Map<String, dynamic> payload){
+    _voipPush.configure(
+      onMessage: (bool isLocal, Map<String, dynamic> payload){
       // handle foreground notification
       print("received on foreground payload: $payload, isLocal=$isLocal");
       return null;
-    }, onResume: (bool isLocal, Map<String, dynamic> payload){
-      // handle background notification
-      print("received on background payload: $payload, isLocal=$isLocal");
-      showLocalNotification(payload);
-      return null;
-    });
+      }, onResume: (bool isLocal, Map<String, dynamic> payload){
+        // handle background notification
+        print("received on background payload: $payload, isLocal=$isLocal");
+        showLocalNotification(payload);
+        return null;
+      }
+    );
   }
   void onToken(String token) {
-      _pushToken = token;
+    _pushToken = token;
+    
   }
 
   showLocalNotification(Map<String, dynamic> notification) {

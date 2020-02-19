@@ -495,6 +495,7 @@ class _ChatScreenState extends State<ChatScreen> {
       senderId : sender.uid,
       channelName: channelName,
       type: type,
+      status: 'initiated',
       timestamp: Timestamp.now(),
     );
     _repository.addChannelName(_callData);

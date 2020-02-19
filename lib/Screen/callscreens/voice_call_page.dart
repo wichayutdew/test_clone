@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
+import 'package:test_clone/widgets/ios_call_screen.dart';
 
 class VoiceCallPage extends StatefulWidget {
     /// non-modifiable channel name of the page
@@ -17,6 +18,7 @@ class VoiceCallPage extends StatefulWidget {
 class _VoiceCallPageState extends State<VoiceCallPage> {
 
   FirebaseRepository _repository = FirebaseRepository();
+  CallScreenWidget _callScreenWidget = CallScreenWidget();
 
   static const APP_ID = '9826de69c0a14497b203f63fbc0aa7cb';
   static final _users = <int>[];
@@ -115,6 +117,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
   }
 
   Future<void> _onCallEnd(BuildContext context) async {
+    _callScreenWidget.endCall(widget.channelName);
     Navigator.pop(context);
   }
 
