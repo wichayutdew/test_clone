@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:test_clone/Screen/chatscreens/chat_screen.dart';
 import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
@@ -34,13 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   searchAppBar(BuildContext context){
-    return GradientAppBar(
-      gradient: LinearGradient(
-        colors: [
-          UniversalVariables.gradientColorStart,
-          UniversalVariables.gradientColorEnd,
-        ],
-      ),
+    return AppBar(
       leading : IconButton(
         icon : Icon(Icons.arrow_back, color : Colors.white,),
         onPressed : () => Navigator.pop(context),

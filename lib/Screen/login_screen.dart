@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test_clone/Screen/home_screen.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:test_clone/utils/universal_variables.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -41,13 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget loginButton() {
     
-    return Shimmer.fromColors(
-      
-      baseColor : Colors.white,
-      
-      highlightColor : UniversalVariables.senderColor,
-      
-      child: FlatButton(
+    return FlatButton(
         padding : EdgeInsets.all(35),
         
         child : Text(
@@ -60,9 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         
         shape : RoundedRectangleBorder(borderRadius : BorderRadius.circular(10)),
-      ),
-    
-    );
+      );
   }
 
   void performLogin() {

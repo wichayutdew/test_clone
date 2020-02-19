@@ -42,11 +42,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   File image;
   String imageUrl = '';
+  
   bool isLoading = false;
 
   bool isWriting = false;
 
-  @override
   void dispose() {
     Firestore.instance.collection('users').document(_currentUserId).updateData({'chatWith': ''});
     super.dispose();
@@ -69,7 +69,6 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: UniversalVariables.blackColor,
@@ -276,93 +275,99 @@ class _ChatScreenState extends State<ChatScreen> {
       });
     }
 
-    addMediaModal(context) {
-      showModalBottomSheet(
-          context: context,
-          elevation: 0,
-          backgroundColor: UniversalVariables.blackColor,
-          builder: (context) {
-            return Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  child: Row(
-                    children: <Widget>[
-                      FlatButton(
-                        child: Icon(
-                          Icons.close,
-                        ),
-                        onPressed: () {
-                          Navigator.maybePop(context);
-                        },
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Content and tools",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  child: ListView(
-                    children: <Widget>[
-                      ModalTile(
-                        title: "Media",
-                        subtitle: "Share Photos and Video",
-                        icon: Icons.image,
-                        
-                      ),
-                      ModalTile(
-                        title: "File",
-                        subtitle: "Share files",
-                        icon: Icons.tab),
-                    ModalTile(
-                        title: "Contact",
-                        subtitle: "Share contacts",
-                        icon: Icons.contacts),
-                    ModalTile(
-                        title: "Location",
-                        subtitle: "Share a location",
-                        icon: Icons.add_location),
-                    ModalTile(
-                        title: "Schedule Call",
-                        subtitle: "Arrange a skype call and get reminders",
-                        icon: Icons.schedule),
-                    ModalTile(
-                        title: "Create Poll",
-                        subtitle: "Share polls",
-                        icon: Icons.poll)
-                    ],
-                  ),
-                ),
-              ],
-            );
-          });
-    }
+    // addMediaModal(context) {
+    //   showModalBottomSheet(
+    //     context: context,
+    //     elevation: 0,
+    //     backgroundColor: UniversalVariables.blackColor,
+    //     builder: (context) {
+    //       return Column(
+    //         children: <Widget>[
+    //           Container(
+    //             padding: EdgeInsets.symmetric(vertical: 15),
+    //             child: Row(
+    //               children: <Widget>[
+    //                 FlatButton(
+    //                   child: Icon(
+    //                     Icons.close,
+    //                   ),
+    //                   onPressed: () {
+    //                     Navigator.maybePop(context);
+    //                   },
+    //                 ),
+    //                 Expanded(
+    //                   child: Align(
+    //                     alignment: Alignment.centerLeft,
+    //                     child: Text(
+    //                       "Content and tools",
+    //                       style: TextStyle(
+    //                           color: Colors.white,
+    //                           fontSize: 20,
+    //                           fontWeight: FontWeight.bold),
+    //                     ),
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //           Flexible(
+    //             child: ListView(
+    //               children: <Widget>[
+    //                 ModalTile(
+    //                   title: "Media",
+    //                   subtitle: "Share Photos and Video",
+    //                   icon: Icons.image,
+                      
+    //                 ),
+    //                 ModalTile(
+    //                   title: "File",
+    //                   subtitle: "Share files",
+    //                   icon: Icons.tab
+    //                 ),
+    //                 ModalTile(
+    //                   title: "Contact",
+    //                   subtitle: "Share contacts",
+    //                   icon: Icons.contacts
+    //                 ),
+    //                 ModalTile(
+    //                   title: "Location",
+    //                   subtitle: "Share a location",
+    //                   icon: Icons.add_location
+    //                 ),
+    //                 ModalTile(
+    //                   title: "Schedule Call",
+    //                   subtitle: "Arrange a skype call and get reminders",
+    //                   icon: Icons.schedule
+    //                 ),
+    //                 ModalTile(
+    //                   title: "Create Poll",
+    //                   subtitle: "Share polls",
+    //                   icon: Icons.poll
+    //                 )
+    //               ],
+    //             ),
+    //           ),
+    //         ],
+    //       );
+    //     }
+    //   );
+    // }
 
     return Container(
       padding: EdgeInsets.all(10),
       child: Row(
         children: <Widget>[
-          GestureDetector(
-            onTap: () => addMediaModal(context),
-            child: Container(
-              padding : EdgeInsets.all(5),
-              decoration : BoxDecoration(
-                gradient: UniversalVariables.fabGradient,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.add),
-            ),
-          ),
+          // GestureDetector(
+          //   onTap: () => addMediaModal(context),
+          //   child: Container(
+          //     padding : EdgeInsets.all(5),
+          //     decoration : BoxDecoration(
+          //       gradient: UniversalVariables.fabGradient,
+          //       shape: BoxShape.circle,
+          //     ),
+          //     child: Icon(Icons.add),
+          //   ),
+          // ),
           SizedBox(width: 5,),
           Expanded(
             child: TextField(
@@ -517,9 +522,11 @@ class _ChatScreenState extends State<ChatScreen> {
             Icons.video_call,
           ),
           onPressed: () {
+
             _handleCameraAndMic();
             String channelName = uuid.v1();
             uploadCallData(channelName, "video");
+            
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -535,9 +542,11 @@ class _ChatScreenState extends State<ChatScreen> {
             Icons.phone,
           ),
           onPressed: () {
+
             _handleMic();
             String channelName = uuid.v1();
             uploadCallData(channelName, "voice");
+
             Navigator.push(
               context,
               MaterialPageRoute(

@@ -1,5 +1,4 @@
 import 'package:flutter_call_kit/flutter_call_kit.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class CallScreenWidget{
   final FlutterCallKit _callKit = new FlutterCallKit();
