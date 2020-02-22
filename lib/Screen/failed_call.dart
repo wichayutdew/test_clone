@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:test_clone/Screen/home_screen.dart';
+import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/utils/universal_variables.dart';
 
 class FailCallScreen extends StatefulWidget {
+  final String channelName;
+  /// Creates a call page with given channel name.
+  const FailCallScreen({Key key, @required this.channelName}) : super(key: key);
   @override
   FailCallScreenState createState() => new FailCallScreenState();
 }
 
 class FailCallScreenState extends State<FailCallScreen> {
+
+  FirebaseRepository _repository = FirebaseRepository();
+
+  @override
+  void initState() {
+    super.initState();
+    _repository.endCall(widget.channelName);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

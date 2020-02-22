@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:test_clone/Screen/callscreens/video_call_page.dart';
 import 'package:test_clone/Screen/callscreens/voice_call_page.dart';
+import 'package:test_clone/Screen/failed_call.dart';
 import 'package:test_clone/Screen/home_screen.dart';
-import 'package:test_clone/locator.dart';
 import 'package:test_clone/models/call.dart';
 import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
-import 'package:test_clone/router.dart';
 import 'package:test_clone/widgets/ios_call_screen.dart';
 
 class IncomingCallPage extends StatefulWidget {
@@ -25,14 +24,12 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
 
   FirebaseRepository _repository = FirebaseRepository();
   CallScreenWidget _callScreenWidget = CallScreenWidget();
-  final NavigationService _navigation = locator<NavigationService>();
 
   User caller = User();
 
   String currentUserid;
 
   void dispose(){
-    _repository.endCall(widget.data.channelName);
     super.dispose();
   }
 
@@ -162,12 +159,14 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance.collection("calls").where("receiverId", isEqualTo : currentUserid).where("status", isEqualTo : 'cancelled').snapshots(),
+      stream: Firestore.instance.collection("calls").where("channelName", isEqualTo : widget.data.channelName).snapshots(),
       builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
         if(snapshot.data != null){
-          if (snapshot.data.documents.length != 0){
-            _repository.endCall(widget.data.channelName);
-            _navigation.navigateTo("/fail_call");
+          DocumentSnapshot snapData = snapshot.data.documents[0];
+          if(snapData['status'] == 'cancelled'){
+            return Scaffold(
+              body : FailCallScreen(channelName: widget.data.channelName)
+            );
           }
         }
         return WillPopScope(

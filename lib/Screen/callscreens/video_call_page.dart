@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:test_clone/locator.dart';
+import 'package:test_clone/Screen/failed_call.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
-import 'package:test_clone/router.dart';
 import 'package:test_clone/widgets/ios_call_screen.dart';
 
 class VideoCallPage extends StatefulWidget {
@@ -22,7 +21,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
 
   FirebaseRepository _repository = FirebaseRepository();
   CallScreenWidget _callScreenWidget = CallScreenWidget();
-  final NavigationService _navigation = locator<NavigationService>();
 
 
   static const APP_ID = '9826de69c0a14497b203f63fbc0aa7cb';
@@ -39,7 +37,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
     // destroy sdk
     AgoraRtcEngine.leaveChannel();
     AgoraRtcEngine.destroy();
-    _repository.endCall(widget.channelName);
     super.dispose();
   }
 
@@ -60,7 +57,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
     await _initAgoraRtcEngine();
     _addAgoraEventHandlers();
     await AgoraRtcEngine.enableWebSdkInteroperability(true);
-    // AgoraRtcEngine.setParameters("{\"rtc.log_filter\": 65535}");
     await AgoraRtcEngine.setParameters(
         '''{\"che.video.lowBitRateStreamParameter\":{\"width\":320,\"height\":180,\"frameRate\":15,\"bitRate\":140}}''');
     await AgoraRtcEngine.joinChannel(null,channelName,null,0);
@@ -298,14 +294,16 @@ class _VideoCallPageState extends State<VideoCallPage> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance.collection("calls").where("senderId", isEqualTo : currentUserid).where("status", isEqualTo : 'rejected').snapshots(),
+      stream: Firestore.instance.collection("calls").where("channelName", isEqualTo : widget.channelName).snapshots(),
       builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
         if(snapshot.data != null){
-          if (snapshot.data.documents.length != 0){
-            _repository.endCall(widget.channelName);
-            _navigation.navigateTo("/fail_call");
+          DocumentSnapshot snapData = snapshot.data.documents[0];
+          if(snapData['status'] == 'rejected'){
+            return Scaffold(
+              body : FailCallScreen(channelName: widget.channelName)
+            );
           }
-        }    
+        }
         return WillPopScope(
           onWillPop: ()async {
             if (Navigator.of(context).userGestureInProgress)
