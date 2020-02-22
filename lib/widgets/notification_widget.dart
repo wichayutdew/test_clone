@@ -40,20 +40,33 @@ class NotificationWidget{
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print('onMessage: $message');
-        if(message['notificationType'] == 'call'){
-          IncomingCallData _incomingCallData = IncomingCallData(
-            senderId: message['senderId'],
-            channelName: message['channelName'],
-            type: message['type'],
-          );
-          _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+        if(Platform.isIOS){
+           if(message['notificationType'] == 'call'){
+            IncomingCallData _incomingCallData = IncomingCallData(
+              senderId: message['senderId'],
+              channelName: message['channelName'],
+              type: message['type'],
+            );
+            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+          }else{
+            showNotification(message['notification']);
+          }
+        }
+        else if(Platform.isAndroid){
+          if(message['data']['notificationType'] == 'call'){
+            IncomingCallData _incomingCallData = IncomingCallData(
+              senderId: message['data']['senderId'],
+              channelName: message['data']['channelName'],
+              type: message['data']['type'],
+            );
+            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+          }else{
+            showNotification(message['notification']);
+          }
         }
         // else if(Platform.isIOS){
         //   _callScreenWidget.displayIncomingCall(message['channelName'], 'dew10170@hotmail.com', message['callerName']);
         // }
-        else{
-          showNotification(message['notification']);
-        }
         return;
       },
       onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,

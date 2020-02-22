@@ -10,10 +10,6 @@ class FullPhoto extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(
-          'FULL PHOTO',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
         centerTitle: true,
       ),
       body: new FullPhotoScreen(url: url),

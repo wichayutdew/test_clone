@@ -86,14 +86,25 @@ class FirebaseMethod{
     return await firestore.collection("messages").document(message.receiverId).collection(message.senderId).add(map);
   }
 
-  Future<void> addChannelName(CallData callData) async {
+  Future<void> startCall(CallData callData) async {
     var map = callData.toMap();
     return await firestore.collection("calls").document(callData.channelName).setData(map);
   }
 
-  Future<void> deleteChannelName(String channelName) async {
-    // return await firestore.collection("calls").document(channelName).delete();
+  Future<void> answerCall(String channelName) async {
+    return await firestore.collection("calls").document(channelName).updateData({'status':'incall'});
+  }
+
+  Future<void> endCall(String channelName) async {
     return await firestore.collection("calls").document(channelName).updateData({'status':'terminated'});
+  }
+
+  Future<void> rejectCall(String channelName) async {
+    return await firestore.collection("calls").document(channelName).updateData({'status':'rejected'});
+  }
+
+  Future<void> cancelCall(String channelName) async {
+    return await firestore.collection("calls").document(channelName).updateData({'status':'cancelled'});
   }
 
   Future<User> getUser(uid) async {

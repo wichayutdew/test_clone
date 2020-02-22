@@ -21,9 +21,16 @@ class FirebaseRepository{
 
   Future<void> addMessageToDb(Message message) => _firebaseMethod.addMessageToDb(message);
 
-  Future <void> addChannelName(CallData callData) => _firebaseMethod.addChannelName(callData);
+  Future <void> startCall(CallData callData) => _firebaseMethod.startCall(callData);
 
-  Future <void> deleteChannelName(String channelName) => _firebaseMethod.deleteChannelName(channelName);
+  Future <void> answerCall(String channelName) => _firebaseMethod.answerCall(channelName);
+
+  Future <void> endCall(String channelName) => _firebaseMethod.endCall(channelName);
+
+  Future <void> rejectCall(String channelName) => _firebaseMethod.rejectCall(channelName);
+
+  Future <void> cancelCall(String channelName) => _firebaseMethod.cancelCall(channelName);
+
 
   Future<User> getUser(String uid) => _firebaseMethod.getUser(uid);
 }

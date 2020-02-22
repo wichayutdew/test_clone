@@ -498,8 +498,10 @@ class _ChatScreenState extends State<ChatScreen> {
       status: 'initiated',
       timestamp: Timestamp.now(),
     );
-    _repository.addChannelName(_callData);
+    _repository.startCall(_callData);
     _callScreenWidget.startCall(channelName, 'dew10170@hotmail.com', _currentUserId);
+    Firestore.instance.collection('users').document(_currentUserId).updateData({'chatWith': ''});
+
   }
 
 

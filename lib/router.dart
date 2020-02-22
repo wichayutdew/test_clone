@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:test_clone/Screen/callscreens/incoming_call_page.dart';
 import 'package:test_clone/Screen/callscreens/video_call_page.dart';
 import 'package:test_clone/Screen/callscreens/voice_call_page.dart';
+import 'package:test_clone/Screen/failed_call.dart';
 import 'package:test_clone/Screen/home_screen.dart';
 import 'package:test_clone/Screen/search_screen.dart';
 
@@ -20,6 +21,8 @@ Route<dynamic> generateRoute(RouteSettings settings){
       return MaterialPageRoute(builder: (context) => VoiceCallPage(channelName :args));
     case '/video_call' :
       return MaterialPageRoute(builder: (context) => VideoCallPage(channelName :args));
+    case '/fail_call' :
+      return MaterialPageRoute(builder: (context) => FailCallScreen());
      default :
       return MaterialPageRoute(builder: (context) => HomeScreen());
   }

@@ -56,7 +56,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
           ),
           onPressed : () {
             _navigation.navigateTo("/search_screen");
-            // Navigator.pushNamed(context, "/search_screen");
           },
         ),
 
