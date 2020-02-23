@@ -99,12 +99,25 @@ class FirebaseMethod{
     return await firestore.collection("calls").document(channelName).updateData({'status':'terminated'});
   }
 
+  Future<void> pendingEndCall(String channelName) async {
+    return await firestore.collection("calls").document(channelName).updateData({'status':'pendingterminated'});
+  }
+
   Future<void> rejectCall(String channelName) async {
     return await firestore.collection("calls").document(channelName).updateData({'status':'rejected'});
   }
 
   Future<void> cancelCall(String channelName) async {
     return await firestore.collection("calls").document(channelName).updateData({'status':'cancelled'});
+  }
+
+  Future<void> finishCall(String channelName) async {
+    return await firestore.collection("calls").document(channelName).updateData({'status':'finished'});
+  }
+
+  Future<CallData> getCallData(String channelName) async {
+    QuerySnapshot querySnapshot = await firestore.collection("calls").where("channelName", isEqualTo : channelName).getDocuments();
+    return CallData.fromMap(querySnapshot.documents[0].data);
   }
 
   Future<User> getUser(uid) async {

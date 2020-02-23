@@ -15,11 +15,11 @@ class FailCallScreenState extends State<FailCallScreen> {
 
   FirebaseRepository _repository = FirebaseRepository();
 
-  @override
-  void initState() {
-    super.initState();
+  void dispose(){
+    super.dispose();
     _repository.endCall(widget.channelName);
   }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,12 +27,14 @@ class FailCallScreenState extends State<FailCallScreen> {
       appBar : new AppBar(
         leading : IconButton(
         icon : Icon(Icons.arrow_back, color : Colors.white,),
-        onPressed : () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen()
-                            ),
-                          )
+        onPressed : () => {_repository.endCall(widget.channelName),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen()
+                              ),
+                            )
+                          }
       ),
       ),
       body : Stack(

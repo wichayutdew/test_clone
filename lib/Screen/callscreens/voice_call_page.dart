@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:test_clone/Screen/failed_call.dart';
+import 'package:test_clone/Screen/summaryscreens/failed_call.dart';
+import 'package:test_clone/Screen/summaryscreens/finished_call.dart';
+import 'package:test_clone/models/call.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/widgets/ios_call_screen.dart';
 
@@ -30,6 +33,8 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
   bool speaker = false;
 
   String currentUserid;
+
+  String status;
 
   @override
   void dispose() {
@@ -125,9 +130,15 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
   }
 
   Future<void> _onCallEnd(BuildContext context) async {
-    _callScreenWidget.endCall(widget.channelName);
-    await _repository.cancelCall(widget.channelName);
-    Navigator.pop(context);
+    if(Platform.isIOS){
+      _callScreenWidget.endCall(widget.channelName);
+    }
+    CallData callData = await _repository.getCallData(widget.channelName);
+    if(callData.status == 'incall'){
+      await _repository.finishCall(widget.channelName);
+    }else{
+      await _repository.cancelCall(widget.channelName);
+    }
   }
 
    /// Info panel to show logs
@@ -234,31 +245,49 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
     return StreamBuilder(
       stream: Firestore.instance.collection("calls").where("channelName", isEqualTo : widget.channelName).snapshots(),
       builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
-        if(snapshot.data != null){
-          DocumentSnapshot snapData = snapshot.data.documents[0];
-          if(snapData['status'] == 'rejected'){
+        if(snapshot.hasData && snapshot.data.documents.length != 0){
+          // DocumentSnapshot snapData = snapshot.data.documents[0];
+          CallData callData = CallData.fromMap(snapshot.data.documents[0].data);
+          String callStatus = callData.status;
+          if(callStatus == 'rejected'){
             return Scaffold(
               body : FailCallScreen(channelName: widget.channelName)
             );
+          }else if(callStatus == 'cancelled'){
+            Navigator.pop(context);
+          }else if(callStatus == 'finished' || callStatus == 'pendingterminated'){
+            return Scaffold(
+              body : FinishCallScreen(callData: callData)
+            );
+          }else if(callStatus == 'initiated'  || callStatus == 'incall'){
+            return WillPopScope(
+              onWillPop: ()async {
+                if (Navigator.of(context).userGestureInProgress)
+                  return false;
+                else
+                  return true;
+              },
+              child: Scaffold(
+                backgroundColor: Colors.black,
+                body: Center(
+                  child: Stack(
+                    children: <Widget>[
+                      _panel(),
+                      _toolbar(),
+                    ],
+                  ),
+                ),
+              )
+            );
           }
         }
-        return WillPopScope(
-          onWillPop: ()async {
-            if (Navigator.of(context).userGestureInProgress)
-              return false;
-            else
-              return true;
-          },
-          child: Scaffold(
-            backgroundColor: Colors.black,
-            body: Center(
-              child: Stack(
-                children: <Widget>[
-                  _panel(),
-                  _toolbar(),
-                ],
-              ),
-            ),
+        return Scaffold(
+          body : Stack(
+            children : [
+              Center(
+                child : CircularProgressIndicator()
+              )
+            ]
           )
         );
       }

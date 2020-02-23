@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:test_clone/Screen/callscreens/video_call_page.dart';
 import 'package:test_clone/Screen/callscreens/voice_call_page.dart';
-import 'package:test_clone/Screen/failed_call.dart';
 import 'package:test_clone/Screen/home_screen.dart';
+import 'package:test_clone/Screen/summaryscreens/failed_call.dart';
 import 'package:test_clone/models/call.dart';
 import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/widgets/ios_call_screen.dart';
+
 
 class IncomingCallPage extends StatefulWidget {
 
@@ -82,7 +83,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
         }else{
           return Container();
         }
-      },
+      }
     );
   }
 
@@ -161,26 +162,37 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
     return StreamBuilder(
       stream: Firestore.instance.collection("calls").where("channelName", isEqualTo : widget.data.channelName).snapshots(),
       builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
-        if(snapshot.data != null){
-          DocumentSnapshot snapData = snapshot.data.documents[0];
-          if(snapData['status'] == 'cancelled'){
+        if(snapshot.hasData && snapshot.data.documents.length != 0){
+          var snapData = snapshot.data.documents[0];
+          var callStatus = snapData['status'];
+          if(callStatus == 'cancelled'){
             return Scaffold(
               body : FailCallScreen(channelName: widget.data.channelName)
             );
+          }else{
+            return WillPopScope(
+              onWillPop: ()async {
+                if (Navigator.of(context).userGestureInProgress)
+                  return false;
+                else
+                  return true;
+              },
+              child: Stack(
+                children: <Widget>[
+                  _caller(),
+                  _toolbar()
+                ],
+              )
+            );
           }
         }
-        return WillPopScope(
-          onWillPop: ()async {
-            if (Navigator.of(context).userGestureInProgress)
-              return false;
-            else
-              return true;
-          },
-          child: Stack(
-            children: <Widget>[
-              _caller(),
-              _toolbar()
-            ],
+        return Scaffold(
+          body : Stack(
+            children : [
+              Center(
+                child : CircularProgressIndicator()
+              )
+            ]
           )
         );
       }
