@@ -1,6 +1,7 @@
 import 'package:flutter_voip_push_notification/flutter_voip_push_notification.dart';
 
 class PushKitWidget{
+
   String _pushToken = '';
   final FlutterVoipPushNotification _voipPush = FlutterVoipPushNotification();
 
@@ -25,9 +26,10 @@ class PushKitWidget{
       }
     );
   }
+
   void onToken(String token) {
-    _pushToken = token;
-    
+      _pushToken = token;
+      print(_pushToken);
   }
 
   showLocalNotification(Map<String, dynamic> notification) {

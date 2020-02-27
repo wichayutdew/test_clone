@@ -73,6 +73,13 @@ class _VideoCallPageState extends State<VideoCallPage> {
       });
     };
 
+    AgoraRtcEngine.onRtcStats = (RtcStats stat){
+      setState(() {
+        final info = 'onRtcStats: $stat';
+        _infoStrings.add(info);
+      });
+    };
+
     AgoraRtcEngine.onJoinChannelSuccess = (
       String channel,
       int uid,
@@ -306,18 +313,27 @@ class _VideoCallPageState extends State<VideoCallPage> {
       stream: Firestore.instance.collection("calls").where("channelName", isEqualTo : widget.channelName).snapshots(),
       builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
         if(snapshot.hasData && snapshot.data.documents.length != 0){
-          // var snapData = snapshot.data.documents[0];
           CallData callData = CallData.fromMap(snapshot.data.documents[0].data);
           String callStatus = callData.status;
           if(callStatus == 'rejected'){
-            return Scaffold(
-              body : FailCallScreen(channelName: widget.channelName)
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FailCallScreen(
+                  channelName: widget.channelName,
+                ),
+              ),
             );
           }else if(callStatus == 'cancelled'){
             Navigator.pop(context);
           }else if(callStatus == 'finished' || callStatus == 'pendingterminated'){
-            return Scaffold(
-              body : FinishCallScreen(callData: callData)
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FinishCallScreen(
+                  callData:callData,
+                ),
+              ),
             );
           }else if (callStatus == 'initiated'  || callStatus == 'incall'){
             return WillPopScope(

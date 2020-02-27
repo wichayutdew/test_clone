@@ -25,22 +25,22 @@ dependencies:
   
   # Firebase handler
   firebase_storage: ^3.1.1
-  cloud_firestore: ^0.13.0+1
-  firebase_auth: ^0.15.3+1
-  google_sign_in: ^4.1.1
+  cloud_firestore: ^0.13.3
+  firebase_auth: ^0.15.4
+  google_sign_in: ^4.1.4
   firebase_messaging: ^6.0.9
 
   # Call handler
   flutter_call_kit: ^0.0.2
-  agora_rtc_engine: ^1.0.4
+  agora_rtc_engine: ^1.0.7
 
   # Notification Handler
-  flutter_local_notifications: ^1.1.6
+  flutter_local_notifications: ^1.2.0+2
   flutter_voip_push_notification: ^0.0.3
 
   # Photo handler
-  image_picker: ^0.6.3+1
-  photo_view: ^0.9.1
+  image_picker: ^0.6.3+4
+  photo_view: ^0.9.2
   cached_network_image: ^2.0.0
 
   # Permission handler

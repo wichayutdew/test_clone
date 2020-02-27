@@ -250,14 +250,24 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
           CallData callData = CallData.fromMap(snapshot.data.documents[0].data);
           String callStatus = callData.status;
           if(callStatus == 'rejected'){
-            return Scaffold(
-              body : FailCallScreen(channelName: widget.channelName)
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FailCallScreen(
+                  channelName: widget.channelName,
+                ),
+              ),
             );
           }else if(callStatus == 'cancelled'){
             Navigator.pop(context);
           }else if(callStatus == 'finished' || callStatus == 'pendingterminated'){
-            return Scaffold(
-              body : FinishCallScreen(callData: callData)
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FinishCallScreen(
+                  callData: callData,
+                ),
+              ),
             );
           }else if(callStatus == 'initiated'  || callStatus == 'incall'){
             return WillPopScope(

@@ -158,7 +158,7 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
-  - agora_rtc_engine (1.0.4):
+  - agora_rtc_engine (1.0.7):
     - AgoraRtcEngine_iOS (= 2.9.1)
     - Flutter
   - AgoraRtcEngine_iOS (2.9.1)
@@ -176,6 +176,8 @@ PODS:
   - cloud_firestore (0.0.1):
     - Firebase/Core
     - Firebase/Firestore (~> 6.0)
+    - Flutter
+  - cloud_firestore_web (0.1.0):
     - Flutter
   - Firebase/Analytics (6.14.0):
     - Firebase/Core
@@ -366,6 +368,7 @@ PODS:
 DEPENDENCIES:
   - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
+  - cloud_firestore_web (from `.symlinks/plugins/cloud_firestore_web/ios`)
   - Firebase/Analytics
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_auth_web (from `.symlinks/plugins/firebase_auth_web/ios`)
@@ -422,6 +425,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/agora_rtc_engine/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
+  cloud_firestore_web:
+    :path: ".symlinks/plugins/cloud_firestore_web/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_auth_web:
@@ -459,15 +464,16 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   abseil: 18063d773f5366ff8736a050fe035a28f635fd27
-  agora_rtc_engine: 0e95aac884559fc389547008d9f1172d0390649f
+  agora_rtc_engine: 24347f5a6f64ee1d231ff972ecf0bf86512f28cd
   AgoraRtcEngine_iOS: b2eedd8f9ab47b71163f3285e836bd23feb43fff
   AppAuth: 73574f3013a1e65b9601a3ddc8b3158cce68c09d
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
-  cloud_firestore: c5d1e4d114eecb1dfb535f008435685bcf6063f1
+  cloud_firestore: 11c87f1d0b4193831045a320aed50723b67f2ea3
+  cloud_firestore_web: 9ec3dc7f5f98de5129339802d491c1204462bfec
   Firebase: 0219bb4782eb1406f1b9b0628a2e625484ce910d
-  firebase_auth: 697625863042c7af7a01b5f1a4cfff37d30743b4
+  firebase_auth: 1f46484071219159ad6c64d304af425ad7373052
   firebase_auth_web: 0955c07bcc06e84af76b9d4e32e6f31518f2d7de
-  firebase_core: 9bd2e66a276153e219a87ff39dfecb6b671f524a
+  firebase_core: dc539d4bdc69894823e4a6e557034a9e48960f21
   firebase_core_web: d501d8b946b60c8af265428ce483b0fff5ad52d1
   firebase_messaging: 73b3e7dd7b3b6a7e4bdac10d5295211ca4f87f90
   firebase_storage: cee2383f53c26690269ab667b4dbfe25452c6caa

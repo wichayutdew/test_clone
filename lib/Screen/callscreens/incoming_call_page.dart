@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -97,7 +99,9 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
         children: <Widget>[
           RawMaterialButton(
             onPressed: () {
-              _callScreenWidget.rejectCall(widget.data.channelName);
+              if(Platform.isIOS){
+                _callScreenWidget.rejectCall(widget.data.channelName);
+              }
               _repository.rejectCall(widget.data.channelName);
               Navigator.push(
                 context,
@@ -121,7 +125,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
               if(widget.data.type == 'video'){
                 _handleCameraAndMic();
                 _repository.answerCall(widget.data.channelName);
-                Navigator.push(
+                Navigator.pushReplacement(
                 context,
                   MaterialPageRoute(
                     builder: (context) => VideoCallPage(
@@ -132,7 +136,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
               }else if (widget.data.type == 'voice'){
                 _handleMic();
                 _repository.answerCall(widget.data.channelName);
-                Navigator.push(
+                Navigator.pushReplacement(
                 context,
                   MaterialPageRoute(
                     builder: (context) => VoiceCallPage(
@@ -166,9 +170,14 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
           var snapData = snapshot.data.documents[0];
           var callStatus = snapData['status'];
           if(callStatus == 'cancelled'){
-            return Scaffold(
-              body : FailCallScreen(channelName: widget.data.channelName)
-            );
+            Navigator.pushReplacement(
+                context,
+                  MaterialPageRoute(
+                    builder: (context) => FailCallScreen(
+                      channelName: widget.data.channelName,
+                    ),
+                  ),
+                );
           }else{
             return WillPopScope(
               onWillPop: ()async {

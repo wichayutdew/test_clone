@@ -24,13 +24,19 @@ import Flutter
                       completion: @escaping () -> Void){
     // Register VoIP push token (a property of PKPushCredentials) with server
     FlutterVoipPushNotificationPlugin.didReceiveIncomingPush(with: payload, forType: type.rawValue)
+
     
-    // Retrieve information like handle and callerName here
-    // NSString *uuid = /* fetch for payload or ... */ [[[NSUUID UUID] UUIDString] lowercaseString];
-    // NSString *callerName = @"caller name here";
-    // NSString *handle = @"caller number here";
-    // FlutterCallKitPlugin.reportNewIncomingCall(uuid: uuid, handle:handle, handleType:@"generic", hasVideo:false, localizedCallerName:callerName, fromPushKit:YES)
-    // completion();
+    let payloadDict = payload.dictionaryPayload["aps"] as! Dictionary<String, Any>
+    let message = payloadDict["msg_data"] as! String
+    print(message)
+    let data = try! JSONSerialization.jsonObject(with: message.data(using: .utf8)!, options: []) as! [String:Any]
+    let uuid = data["channelName"] as! String
+    let handle = data["senderId"] as! Int
+    let callerName = data["callerName"] as! String
+
+    FlutterCallKitPlugin.reportNewIncomingCall(uuid: uuid, handle: handle, handleType:"generic", hasVideo:false, localizedCallerName:callerName, fromPushKit:true)
+    
+    completion();
     
   }
 
@@ -39,5 +45,6 @@ import Flutter
     // Process the received push
     FlutterVoipPushNotificationPlugin.didUpdate(pushCredentials, forType: type.rawValue);
   }
+  
 }
 
