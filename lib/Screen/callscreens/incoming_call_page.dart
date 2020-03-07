@@ -169,12 +169,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
           var snapData = snapshot.data.documents[0];
           var callStatus = snapData['status'];
           if(callStatus == 'terminated'){
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen()
-              ),
-            );
+            return Scaffold(body: HomeScreen());
           }else{
             return WillPopScope(
               onWillPop: ()async {

@@ -6,7 +6,6 @@ import 'package:test_clone/utils/universal_variables.dart';
 
 class FinishCallScreen extends StatefulWidget {
   final CallData callData;
-  /// Creates a call page with given channel name.
   const FinishCallScreen({Key key, @required this.callData}) : super(key: key);
   @override
   FinishCallScreenState createState() => new FinishCallScreenState();

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:test_clone/Screen/home_screen.dart';
 import 'package:test_clone/Screen/summaryscreens/failed_call.dart';
 import 'package:test_clone/Screen/summaryscreens/finished_call.dart';
 import 'package:test_clone/models/call.dart';
@@ -136,9 +137,9 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
     CallData callData = await _repository.getCallData(widget.channelName);
     if(callData.status == 'incall'){
       await _repository.finishCall(widget.channelName);
-      Navigator.pop(context);
     }else{
       await _repository.cancelCall(widget.channelName);
+      Navigator.pop(context);
     }
   }
 
@@ -252,23 +253,11 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
           String callStatus = callData.status;
           
           if(callStatus == 'rejected'){
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FailCallScreen(
-                  channelName: widget.channelName,
-                ),
-              ),
-            );
+            return Scaffold(body:FailCallScreen(channelName:widget.channelName));
           }else if(callStatus == 'finished' || callStatus == 'pendingterminated'){
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FinishCallScreen(
-                  callData: callData,
-                ),
-              ),
-            );
+            return Scaffold(body:FinishCallScreen(callData:callData));
+          }else if(callStatus == 'terminated'){
+            return Scaffold(body:HomeScreen());
           }else if(callStatus == 'initiated'  || callStatus == 'incall'){
             return WillPopScope(
               onWillPop: ()async {
