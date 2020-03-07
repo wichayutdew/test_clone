@@ -253,8 +253,12 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
           String callStatus = callData.status;
           
           if(callStatus == 'rejected'){
+            AgoraRtcEngine.leaveChannel();
+            AgoraRtcEngine.destroy();
             return Scaffold(body:FailCallScreen(channelName:widget.channelName));
           }else if(callStatus == 'finished' || callStatus == 'pendingterminated'){
+            AgoraRtcEngine.leaveChannel();
+            AgoraRtcEngine.destroy();
             return Scaffold(body:FinishCallScreen(callData:callData));
           }else if(callStatus == 'terminated'){
             return Scaffold(body:HomeScreen());
