@@ -3,19 +3,19 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>165074784793-nvjb9lsdtj7p1t16rgm46br8s1irf2uc.apps.googleusercontent.com</string>
+	<string>165074784793-6btqasgjn2qn49vd2v012l05gvvjd6n4.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.165074784793-nvjb9lsdtj7p1t16rgm46br8s1irf2uc</string>
+	<string>com.googleusercontent.apps.165074784793-6btqasgjn2qn49vd2v012l05gvvjd6n4</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>165074784793-43mnodc43gfdht1d7s5o469pan92icn3.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBX8QnPaojN7xzC2kfrmw_m8Erk1JOU-uY</string>
+	<string>AIzaSyAo9rh-UX24RTvc_RBi2uxQwSmI0TePuCQ</string>
 	<key>GCM_SENDER_ID</key>
 	<string>165074784793</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.testClone2020</string>
+	<string>com.RelifNow.testClone2020</string>
 	<key>PROJECT_ID</key>
 	<string>firstcarestartup</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:165074784793:ios:4dd3044147af1964395088</string>
+	<string>1:165074784793:ios:eb9157d2182e18f3395088</string>
 	<key>DATABASE_URL</key>
 	<string>https://firstcarestartup.firebaseio.com</string>
 </dict>
