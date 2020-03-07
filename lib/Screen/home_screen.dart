@@ -1,14 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:test_clone/Screen/callscreens/video_call_page.dart';
-import 'package:test_clone/Screen/callscreens/voice_call_page.dart';
 import 'package:test_clone/Screen/pageviews/chat_list_screen.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/utils/universal_variables.dart';
-import 'package:test_clone/widgets/ios_call_screen.dart';
+// import 'package:test_clone/widgets/ios_call_screen.dart';
 import 'package:test_clone/widgets/notification_widget.dart';
-import 'package:test_clone/widgets/push_kit.dart';
+// import 'package:test_clone/widgets/push_kit.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -19,12 +16,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   FirebaseRepository _repository = FirebaseRepository();
   NotificationWidget _notificationWidget = NotificationWidget();
-  CallScreenWidget _callScreenWidget = CallScreenWidget();
-  PushKitWidget _pushKitWidget = PushKitWidget();
+  // CallScreenWidget _callScreenWidget = CallScreenWidget();
+  // PushKitWidget _pushKitWidget = PushKitWidget();
 
   PageController pageController;
   int _page = 0;
-  String _currentUserId;
 
   @override
   void initState() {
@@ -32,13 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
     pageController = PageController();
     _repository.getCurrentUser().then((user){
       _notificationWidget.registerNotification(user.uid);
-      setState(() {
-        _currentUserId = user.uid;
-      });
     });
     _notificationWidget.configLocalNotification();
-    _pushKitWidget.regiseterPushkit();
-    _callScreenWidget.callKitConfigure();
+    // _pushKitWidget.regiseterPushkit();
+    // _callScreenWidget.callKitConfigure();
   }
 
   void onPageChanged(int page){
@@ -54,33 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     double _labelFontSize = 10;
-    
-    return StreamBuilder(
-      stream: Firestore.instance.collection("calls").where("receiverId", isEqualTo : _currentUserId).where('status', isEqualTo : 'incall').snapshots(),
-      builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
-        if(snapshot.hasData && snapshot.data.documents.length != 0){
-          var snapData = snapshot.data.documents[0];
-          if(snapData['type'] == 'voice'){
-            Navigator.pushReplacement(
-              context,
-                MaterialPageRoute(
-                  builder: (context) => VoiceCallPage(
-                    channelName: snapData['channelName'],
-                ),
-              ),
-            );
-          }else if(snapData['type'] == 'video'){
-            Navigator.pushReplacement(
-              context,
-                MaterialPageRoute(
-                  builder: (context) => VideoCallPage(
-                    channelName: snapData['channelName'],
-                ),
-              ),
-            );
-          }
-        }
-
         return Scaffold(
           backgroundColor :  UniversalVariables.blackColor, 
           body : PageView(
@@ -146,6 +112,4 @@ class _HomeScreenState extends State<HomeScreen> {
           )        
         );  
       }
-    );
-  }
 }

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +8,7 @@ import 'package:test_clone/Screen/summaryscreens/failed_call.dart';
 import 'package:test_clone/Screen/summaryscreens/finished_call.dart';
 import 'package:test_clone/models/call.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
-import 'package:test_clone/widgets/ios_call_screen.dart';
+// import 'package:test_clone/widgets/ios_call_screen.dart';
 
 class VideoCallPage extends StatefulWidget {
     /// non-modifiable channel name of the page
@@ -23,7 +23,7 @@ class VideoCallPage extends StatefulWidget {
 class _VideoCallPageState extends State<VideoCallPage> {
 
   FirebaseRepository _repository = FirebaseRepository();
-  CallScreenWidget _callScreenWidget = CallScreenWidget();
+  // CallScreenWidget _callScreenWidget = CallScreenWidget();
 
 
   static const APP_ID = '9826de69c0a14497b203f63fbc0aa7cb';
@@ -69,13 +69,6 @@ class _VideoCallPageState extends State<VideoCallPage> {
     AgoraRtcEngine.onError = (dynamic code) {
       setState(() {
         final info = 'onError: $code';
-        _infoStrings.add(info);
-      });
-    };
-
-    AgoraRtcEngine.onRtcStats = (RtcStats stat){
-      setState(() {
-        final info = 'onRtcStats: $stat';
         _infoStrings.add(info);
       });
     };
@@ -144,13 +137,14 @@ class _VideoCallPageState extends State<VideoCallPage> {
   }
 
   Future<void> _onCallEnd(BuildContext context) async {
-    if(Platform.isIOS){
-      _callScreenWidget.endCall(widget.channelName);
-    }
+    // if(Platform.isIOS){
+    //   _callScreenWidget.endCall(widget.channelName);
+    // }
     CallData callData = await _repository.getCallData(widget.channelName);
     if(callData.status == 'incall'){
       await _repository.finishCall(widget.channelName);
-    }else if (_users.length == 0){
+      Navigator.pop(context);
+    }else{
       await _repository.cancelCall(widget.channelName);
     }
   }
@@ -312,11 +306,13 @@ class _VideoCallPageState extends State<VideoCallPage> {
     return StreamBuilder(
       stream: Firestore.instance.collection("calls").where("channelName", isEqualTo : widget.channelName).snapshots(),
       builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
+        
         if(snapshot.hasData && snapshot.data.documents.length != 0){
           CallData callData = CallData.fromMap(snapshot.data.documents[0].data);
           String callStatus = callData.status;
+          
           if(callStatus == 'rejected'){
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => FailCallScreen(
@@ -324,10 +320,8 @@ class _VideoCallPageState extends State<VideoCallPage> {
                 ),
               ),
             );
-          }else if(callStatus == 'cancelled'){
-            Navigator.pop(context);
           }else if(callStatus == 'finished' || callStatus == 'pendingterminated'){
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => FinishCallScreen(

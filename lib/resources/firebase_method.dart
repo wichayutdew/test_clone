@@ -108,7 +108,7 @@ class FirebaseMethod{
   }
 
   Future<void> cancelCall(String channelName) async {
-    return await firestore.collection("calls").document(channelName).updateData({'status':'cancelled'});
+    return await firestore.collection("calls").document(channelName).updateData({'status':'terminated'});
   }
 
   Future<void> finishCall(String channelName) async {

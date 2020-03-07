@@ -1,4 +1,4 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +6,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:test_clone/Screen/callscreens/video_call_page.dart';
 import 'package:test_clone/Screen/callscreens/voice_call_page.dart';
 import 'package:test_clone/Screen/home_screen.dart';
-import 'package:test_clone/Screen/summaryscreens/failed_call.dart';
 import 'package:test_clone/models/call.dart';
 import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
-import 'package:test_clone/widgets/ios_call_screen.dart';
+// import 'package:test_clone/widgets/ios_call_screen.dart';
 
 
 class IncomingCallPage extends StatefulWidget {
@@ -26,7 +25,7 @@ class IncomingCallPage extends StatefulWidget {
 class _IncomingCallPageState extends State<IncomingCallPage> {
 
   FirebaseRepository _repository = FirebaseRepository();
-  CallScreenWidget _callScreenWidget = CallScreenWidget();
+  // CallScreenWidget _callScreenWidget = CallScreenWidget();
 
   User caller = User();
 
@@ -99,9 +98,9 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
         children: <Widget>[
           RawMaterialButton(
             onPressed: () {
-              if(Platform.isIOS){
-                _callScreenWidget.rejectCall(widget.data.channelName);
-              }
+              // if(Platform.isIOS){
+              //   _callScreenWidget.rejectCall(widget.data.channelName);
+              // }
               _repository.rejectCall(widget.data.channelName);
               Navigator.push(
                 context,
@@ -169,15 +168,13 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
         if(snapshot.hasData && snapshot.data.documents.length != 0){
           var snapData = snapshot.data.documents[0];
           var callStatus = snapData['status'];
-          if(callStatus == 'cancelled'){
-            Navigator.pushReplacement(
-                context,
-                  MaterialPageRoute(
-                    builder: (context) => FailCallScreen(
-                      channelName: widget.data.channelName,
-                    ),
-                  ),
-                );
+          if(callStatus == 'terminated'){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen()
+              ),
+            );
           }else{
             return WillPopScope(
               onWillPop: ()async {

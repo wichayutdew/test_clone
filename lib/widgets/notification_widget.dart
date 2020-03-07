@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -19,96 +19,65 @@ class NotificationWidget{
 
   static Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
     print(message);
-    if (message.containsKey('data')) {
-      // Handle data message
-      final dynamic data = message['data'];
-      print("_backgroundMessageHandler data: $data");
-      // _callScreenWidget.displayIncomingCall(message['channelName'], 'dew10170@hotmail.com', message['callerName']);
-    }
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      final dynamic notification = message['notification'];
-      print("_backgroundMessageHandler notification: $notification");
-    }
+    // if (message.containsKey('data')) {
+    //   // Handle data message
+    //   final dynamic data = message['data'];
+    //   print("_backgroundMessageHandler data: $data");
+    //   // _callScreenWidget.displayIncomingCall(message['channelName'], 'dew10170@hotmail.com', message['callerName']);
+    // }
+    // if (message.containsKey('notification')) {
+    //   // Handle notification message
+    //   final dynamic notification = message['notification'];
+    //   print("_backgroundMessageHandler notification: $notification");
+    // }
   }
 
   void registerNotification(currentUserId) {
-
     // startServiceInPlatform();
-
     firebaseMessaging.requestNotificationPermissions();
     firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
+        var data = message['data'] ?? message;
         print('onMessage: $message');
-        if(Platform.isIOS){
-           if(message['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['senderId'],
-              channelName: message['channelName'],
-              type: message['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }
-          showNotification(message['notification']);
+        print('onData: $data');
+        if(data['notificationType'] == 'call'){
+          IncomingCallData _incomingCallData = IncomingCallData(
+            senderId: data['senderId'],
+            channelName: data['channelName'],
+            type: data['type'],
+          );
+          _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
         }
-        else if(Platform.isAndroid){
-          if(message['data']['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['data']['senderId'],
-              channelName: message['data']['channelName'],
-              type: message['data']['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }
-          showNotification(message['notification']);
-        }
-        return;
+        showNotification(message['notification']);
+      return;
       },
-      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
+
+      onBackgroundMessage: myBackgroundMessageHandler,
+
       onResume: (Map<String, dynamic> message) {
+        var data = message['data'] ?? message;
         print('onResume: $message');
-        if(Platform.isIOS){
-           if(message['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['senderId'],
-              channelName: message['channelName'],
-              type: message['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }
-        }
-        else if(Platform.isAndroid){
-          if(message['data']['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['data']['senderId'],
-              channelName: message['data']['channelName'],
-              type: message['data']['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }
+        print('onData: $data');
+        if(data['notificationType'] == 'call'){
+          IncomingCallData _incomingCallData = IncomingCallData(
+            senderId: data['senderId'],
+            channelName: data['channelName'],
+            type: data['type'],
+          );
+          _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
         }
         return;
       }, onLaunch: (Map<String, dynamic> message) {
-        print('onLaunch: $message');
-        if(Platform.isIOS){
-           if(message['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['senderId'],
-              channelName: message['channelName'],
-              type: message['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }
-        }
-        else if(Platform.isAndroid){
-          if(message['data']['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['data']['senderId'],
-              channelName: message['data']['channelName'],
-              type: message['data']['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }
+        var data = message['data'] ?? message;
+        print('onLauch: $message');
+        print('onData: $data');
+        if(data['notificationType'] == 'call'){
+          IncomingCallData _incomingCallData = IncomingCallData(
+            senderId: data['senderId'],
+            channelName: data['channelName'],
+            type: data['type'],
+          );
+          _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
         }
         return;
     });

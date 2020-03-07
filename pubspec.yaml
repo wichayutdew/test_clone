@@ -28,7 +28,7 @@ dependencies:
   cloud_firestore: ^0.13.3
   firebase_auth: ^0.15.4
   google_sign_in: ^4.1.4
-  firebase_messaging: ^6.0.9
+  firebase_messaging: ^6.0.12
 
   # Call handler
   flutter_call_kit: ^0.0.2
