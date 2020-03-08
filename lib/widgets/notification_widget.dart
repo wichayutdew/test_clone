@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:test_clone/global_navigator/locator.dart';
 import 'package:test_clone/global_navigator/router.dart';
 import 'package:test_clone/models/call.dart';
+import 'package:test_clone/models/user.dart';
 // import 'package:test_clone/widgets/ios_call_screen.dart';
 
 
@@ -46,6 +47,14 @@ class NotificationWidget{
               type: message['type'],
             );
             _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+          }else if(message['notificationType'] == 'message'){
+            User _sender = User(
+              uid : message['senderId'],
+              profilePhoto: message['profilePhoto'],
+              name: message['name'],
+              username: message['username']
+            );
+            _navigation.navigateTo("/chat_room",arguments: _sender);
           }
         }
         else{
@@ -56,6 +65,14 @@ class NotificationWidget{
               type: message['data']['type'],
             );
             _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+          }else if(message['data']['notificationType'] == 'message'){
+            User _sender = User(
+              uid : message['data']['senderId'],
+              profilePhoto: message['data']['profilePhoto'],
+              name: message['data']['name'],
+              username: message['data']['username']
+            );
+            _navigation.navigateTo("/chat_room",arguments: _sender);
           }
         }
         showNotification(message['notification']);
@@ -74,6 +91,14 @@ class NotificationWidget{
               type: message['type'],
             );
             _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+          }else if(message['notificationType'] == 'message'){
+            User _sender = User(
+              uid : message['senderId'],
+              profilePhoto: message['profilePhoto'],
+              name: message['name'],
+              username: message['username']
+            );
+            _navigation.navigateTo("/chat_room",arguments: _sender);
           }
         }
         else{
@@ -84,8 +109,17 @@ class NotificationWidget{
               type: message['data']['type'],
             );
             _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+          }else if(message['data']['notificationType'] == 'message'){
+            User _sender = User(
+              uid : message['data']['senderId'],
+              profilePhoto: message['data']['profilePhoto'],
+              name: message['data']['name'],
+              username: message['data']['username']
+            );
+            _navigation.navigateTo("/chat_room",arguments: _sender);
           }
         }
+        showNotification(message['notification']);
         return;
       }, onLaunch: (Map<String, dynamic> message) {
         print('onLauch: $message');
@@ -97,6 +131,14 @@ class NotificationWidget{
               type: message['type'],
             );
             _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+          }else if(message['notificationType'] == 'message'){
+            User _sender = User(
+              uid : message['senderId'],
+              profilePhoto: message['profilePhoto'],
+              name: message['name'],
+              username: message['username']
+            );
+            _navigation.navigateTo("/chat_room",arguments: _sender);
           }
         }
         else{
@@ -107,8 +149,17 @@ class NotificationWidget{
               type: message['data']['type'],
             );
             _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+          }else if(message['data']['notificationType'] == 'message'){
+            User _sender = User(
+              uid : message['data']['senderId'],
+              profilePhoto: message['data']['profilePhoto'],
+              name: message['data']['name'],
+              username: message['data']['username']
+            );
+            _navigation.navigateTo("/chat_room",arguments: _sender);
           }
         }
+        showNotification(message['notification']);
         return;
     });
 

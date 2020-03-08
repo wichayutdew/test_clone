@@ -124,7 +124,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
               if(widget.data.type == 'video'){
                 _handleCameraAndMic();
                 _repository.answerCall(widget.data.channelName);
-                Navigator.pushReplacement(
+                Navigator.push(
                 context,
                   MaterialPageRoute(
                     builder: (context) => VideoCallPage(
@@ -135,7 +135,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
               }else if (widget.data.type == 'voice'){
                 _handleMic();
                 _repository.answerCall(widget.data.channelName);
-                Navigator.pushReplacement(
+                Navigator.push(
                 context,
                   MaterialPageRoute(
                     builder: (context) => VoiceCallPage(

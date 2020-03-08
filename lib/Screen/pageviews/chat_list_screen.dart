@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:test_clone/Screen/login_screen.dart';
-import 'package:test_clone/global_navigator/locator.dart';
-import 'package:test_clone/global_navigator/router.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/utils/universal_variables.dart';
 import 'package:test_clone/utils/utilities.dart';
@@ -18,7 +16,6 @@ class ChatListScreen extends StatefulWidget {
 //global
 final FirebaseRepository _repository =  FirebaseRepository();
 final NotificationWidget _notificationWidget = NotificationWidget();
-final NavigationService _navigation = locator<NavigationService>();
 
 class _ChatListScreenState extends State<ChatListScreen> {
   String currentUserid;
@@ -55,7 +52,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             color : Colors.white,
           ),
           onPressed : () {
-            _navigation.navigateTo("/search_screen");
+            Navigator.pushNamed(context, "/search_screen");
           },
         ),
 
