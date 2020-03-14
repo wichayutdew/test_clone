@@ -7,8 +7,8 @@ import 'package:test_clone/Screen/callscreens/video_call_page.dart';
 import 'package:test_clone/Screen/callscreens/voice_call_page.dart';
 import 'package:test_clone/Screen/home_screen.dart';
 import 'package:test_clone/models/call.dart';
-import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
+import 'package:test_clone/utils/call_status.dart';
 // import 'package:test_clone/widgets/ios_call_screen.dart';
 
 
@@ -26,24 +26,6 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
 
   FirebaseRepository _repository = FirebaseRepository();
   // CallScreenWidget _callScreenWidget = CallScreenWidget();
-
-  User caller = User();
-
-  String currentUserid;
-
-  void dispose(){
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _repository.getCurrentUser().then((user) {
-      setState(() {
-        currentUserid = user.uid;
-      });
-    });
-  }
 
   Future<void> _handleCameraAndMic() async {
     await PermissionHandler().requestPermissions(
@@ -166,10 +148,10 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
       stream: Firestore.instance.collection("calls").where("channelName", isEqualTo : widget.data.channelName).snapshots(),
       builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
         if(snapshot.hasData && snapshot.data.documents.length != 0){
-          var snapData = snapshot.data.documents[0];
-          var callStatus = snapData['status'];
-          if(callStatus == 'terminated'){
-            return Scaffold(body: HomeScreen());
+          CallData callData = CallData.fromMap(snapshot.data.documents[0].data);
+          String callStatus = callData.status;
+          if(callStatus == CallStatus.terminated){
+            return HomeScreen();
           }else{
             return WillPopScope(
               onWillPop: ()async {

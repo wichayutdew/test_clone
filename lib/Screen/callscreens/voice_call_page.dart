@@ -9,6 +9,7 @@ import 'package:test_clone/Screen/summaryscreens/failed_call.dart';
 import 'package:test_clone/Screen/summaryscreens/finished_call.dart';
 import 'package:test_clone/models/call.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
+import 'package:test_clone/utils/call_status.dart';
 // import 'package:test_clone/widgets/ios_call_screen.dart';
 
 class VoiceCallPage extends StatefulWidget {
@@ -204,7 +205,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
           RawMaterialButton(
             onPressed: () => {_onToggleMute()},
             child: Icon(
-              muted ? Icons.mic : Icons.mic_off,
+              Icons.mic_off,
               color: muted ? Colors.white : Colors.blueAccent,
               size: 20.0,
             ),
@@ -228,7 +229,7 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
           RawMaterialButton(
             onPressed:() => {_onToggleSpeaker()},
             child: Icon(
-              speaker ? Icons.volume_mute : Icons.volume_up,
+              Icons.volume_up,
               color: speaker ? Colors.white : Colors.blueAccent,
               size: 20.0,
             ),
@@ -252,17 +253,20 @@ class _VoiceCallPageState extends State<VoiceCallPage> {
           CallData callData = CallData.fromMap(snapshot.data.documents[0].data);
           String callStatus = callData.status;
           
-          if(callStatus == 'rejected'){
+          if(callStatus == CallStatus.rejected){
             AgoraRtcEngine.leaveChannel();
             AgoraRtcEngine.destroy();
-            return Scaffold(body:FailCallScreen(channelName:widget.channelName));
-          }else if(callStatus == 'finished' || callStatus == 'pendingterminated'){
+            return FailCallScreen(channelName:widget.channelName);
+          }
+          else if(callStatus == CallStatus.finished || callStatus == CallStatus.pendingterminated){
             AgoraRtcEngine.leaveChannel();
             AgoraRtcEngine.destroy();
-            return Scaffold(body:FinishCallScreen(callData:callData));
-          }else if(callStatus == 'terminated'){
-            return Scaffold(body:HomeScreen());
-          }else if(callStatus == 'initiated'  || callStatus == 'incall'){
+            return FinishCallScreen(callData:callData);
+          }
+          else if(callStatus == CallStatus.terminated){
+            return HomeScreen();
+          }
+          else if(callStatus == CallStatus.initiated  || callStatus == CallStatus.incall){
             return WillPopScope(
               onWillPop: ()async {
                 if (Navigator.of(context).userGestureInProgress)

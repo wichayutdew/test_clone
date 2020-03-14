@@ -9,12 +9,13 @@ import 'package:test_clone/Screen/summaryscreens/failed_call.dart';
 import 'package:test_clone/Screen/summaryscreens/finished_call.dart';
 import 'package:test_clone/models/call.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
+import 'package:test_clone/utils/call_status.dart';
 // import 'package:test_clone/widgets/ios_call_screen.dart';
 
 class VideoCallPage extends StatefulWidget {
-    /// non-modifiable channel name of the page
+
   final String channelName;
-  /// Creates a call page with given channel name.
+  
   const VideoCallPage({Key key, @required this.channelName}) : super(key: key);
 
   @override
@@ -264,7 +265,7 @@ class _VideoCallPageState extends State<VideoCallPage> {
           RawMaterialButton(
             onPressed: _onToggleMute,
             child: Icon(
-              muted ? Icons.mic : Icons.mic_off,
+              Icons.mic_off,
               color: muted ? Colors.white : Colors.blueAccent,
               size: 20.0,
             ),
@@ -312,18 +313,20 @@ class _VideoCallPageState extends State<VideoCallPage> {
           CallData callData = CallData.fromMap(snapshot.data.documents[0].data);
           String callStatus = callData.status;
           
-          if(callStatus == 'rejected'){
+          if(callStatus == CallStatus.rejected){
             AgoraRtcEngine.leaveChannel();
             AgoraRtcEngine.destroy();
-            return Scaffold(body:FailCallScreen(channelName:widget.channelName));
-          }else if(callStatus == 'finished' || callStatus == 'pendingterminated'){
-            AgoraRtcEngine.leaveChannel();
-            AgoraRtcEngine.destroy();
-            return Scaffold(body:FinishCallScreen(callData:callData));
-          }else if(callStatus == 'terminated'){
-            return Scaffold(body:HomeScreen());
+            return FailCallScreen(channelName:widget.channelName);
           }
-          else if (callStatus == 'initiated'  || callStatus == 'incall'){
+          else if(callStatus == CallStatus.finished || callStatus == CallStatus.pendingterminated){
+            AgoraRtcEngine.leaveChannel();
+            AgoraRtcEngine.destroy();
+            return FinishCallScreen(callData:callData);
+          }
+          else if(callStatus == CallStatus.terminated){
+            return HomeScreen();
+          }
+          else if (callStatus == CallStatus.initiated  || callStatus == CallStatus.incall){
             return WillPopScope(
             onWillPop: ()async {
               if (Navigator.of(context).userGestureInProgress)

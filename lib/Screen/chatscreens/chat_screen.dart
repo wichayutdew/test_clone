@@ -5,9 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:test_clone/Screen/callscreens/video_call_page.dart';
-import 'package:test_clone/Screen/callscreens/voice_call_page.dart';
+import 'package:test_clone/Screen/callscreens/pending_call_page.dart';
 // import 'package:test_clone/widgets/ios_call_screen.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,7 +16,6 @@ import 'package:test_clone/models/user.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/utils/universal_variables.dart';
 import 'package:test_clone/widgets/appbar.dart';
-import 'package:test_clone/widgets/custom_tile.dart';
 
 
 class ChatScreen extends StatefulWidget {
@@ -477,31 +474,11 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  Future<void> _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
-  }
-
-  Future<void> _handleMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.microphone],
-    );
-  }
-
-  uploadCallData(String channelName, String type){
-    CallData _callData = CallData(
-      receiverId : widget.receiver.uid,
-      senderId : sender.uid,
-      channelName: channelName,
-      type: type,
-      status: 'initiated',
-      timestamp: Timestamp.now(),
-    );
+  uploadCallData(CallData callData){
     // if(Platform.isIOS){
       // _callScreenWidget.startCall(channelName, 'dew10170@hotmail.com', _currentUserId);
     // }
-    _repository.startCall(_callData);
+    _repository.startCall(callData);
     Firestore.instance.collection('users').document(_currentUserId).updateData({'chatWith': ''});
   }
 
@@ -526,16 +503,23 @@ class _ChatScreenState extends State<ChatScreen> {
             Icons.video_call,
           ),
           onPressed: () {
-
-            _handleCameraAndMic();
             String channelName = uuid.v1();
-            uploadCallData(channelName, "video");
+            CallData _callData = CallData(
+              receiverId : widget.receiver.uid,
+              senderId : sender.uid,
+              channelName: channelName,
+              type: 'video',
+              status: 'initiated',
+              timestamp: Timestamp.now(),
+            );
             
+            uploadCallData(_callData);
+
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => VideoCallPage(
-                  channelName: channelName,
+                builder: (context) => PendingCallPage(
+                  callData: _callData,
                 ),
               ),
             );
@@ -546,16 +530,23 @@ class _ChatScreenState extends State<ChatScreen> {
             Icons.phone,
           ),
           onPressed: () {
-
-            _handleMic();
             String channelName = uuid.v1();
-            uploadCallData(channelName, "voice");
+            CallData _callData = CallData(
+              receiverId : widget.receiver.uid,
+              senderId : sender.uid,
+              channelName: channelName,
+              type: 'voice',
+              status: 'initiated',
+              timestamp: Timestamp.now(),
+            );
+            
+            uploadCallData(_callData);
 
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => VoiceCallPage(
-                  channelName: channelName,
+                builder: (context) => PendingCallPage(
+                  callData: _callData,
                 ),
               ),
             );
@@ -566,52 +557,52 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-class ModalTile extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
+// class ModalTile extends StatelessWidget {
+//   final String title;
+//   final String subtitle;
+//   final IconData icon;
 
-  const ModalTile({
-    @required this.title,
-    @required this.subtitle,
-    @required this.icon,
-  });
+//   const ModalTile({
+//     @required this.title,
+//     @required this.subtitle,
+//     @required this.icon,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
-      child: CustomTile(
-        mini: false,
-        leading: Container(
-          margin: EdgeInsets.only(right: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: UniversalVariables.receiverColor,
-          ),
-          padding: EdgeInsets.all(10),
-          child: Icon(
-            icon,
-            color: UniversalVariables.greyColor,
-            size: 38,
-          ),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: TextStyle(
-            color: UniversalVariables.greyColor,
-            fontSize: 14,
-          ),
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            fontSize: 18,
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.symmetric(horizontal: 15),
+//       child: CustomTile(
+//         mini: false,
+//         leading: Container(
+//           margin: EdgeInsets.only(right: 10),
+//           decoration: BoxDecoration(
+//             borderRadius: BorderRadius.circular(15),
+//             color: UniversalVariables.receiverColor,
+//           ),
+//           padding: EdgeInsets.all(10),
+//           child: Icon(
+//             icon,
+//             color: UniversalVariables.greyColor,
+//             size: 38,
+//           ),
+//         ),
+//         subtitle: Text(
+//           subtitle,
+//           style: TextStyle(
+//             color: UniversalVariables.greyColor,
+//             fontSize: 14,
+//           ),
+//         ),
+//         title: Text(
+//           title,
+//           style: TextStyle(
+//             fontWeight: FontWeight.bold,
+//             color: Colors.white,
+//             fontSize: 18,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

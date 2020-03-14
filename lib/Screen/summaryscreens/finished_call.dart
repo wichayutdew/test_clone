@@ -14,8 +14,6 @@ class FinishCallScreen extends StatefulWidget {
 class FinishCallScreenState extends State<FinishCallScreen> {
 
   FirebaseRepository _repository = FirebaseRepository();
-  
-  CallData callData;
 
   void dispose(){
     super.dispose();
