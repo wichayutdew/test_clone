@@ -9,5 +9,4 @@ class Utils {
     String lastNameInitials = namesplit[1][0];
     return firstNameInitials + lastNameInitials;
   }
-  
 }

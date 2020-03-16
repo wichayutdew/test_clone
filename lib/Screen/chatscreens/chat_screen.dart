@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:test_clone/Screen/callscreens/pending_call_page.dart';
+import 'package:test_clone/utils/call_status.dart';
 // import 'package:test_clone/widgets/ios_call_screen.dart';
 import 'package:uuid/uuid.dart';
 
@@ -38,20 +39,20 @@ class _ChatScreenState extends State<ChatScreen> {
   String _currentUserId;
 
   File image;
-  String imageUrl = '';
+  String imageUrl = "";
   
   bool isLoading = false;
 
   bool isWriting = false;
 
   void dispose() {
-    Firestore.instance.collection('users').document(_currentUserId).updateData({'chatWith': ''});
+    Firestore.instance.collection(UniversalVariables.users).document(_currentUserId).updateData({UniversalVariables.chatWith:""});
     super.dispose();
   }
 
   void initState(){
     super.initState();
-    imageUrl = '';
+    imageUrl = "";
     isLoading = false;
     _repository.getCurrentUser().then((user){
       _currentUserId = user.uid;
@@ -62,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
           profilePhoto: user.photoUrl,
         );
       });
-      Firestore.instance.collection('users').document(user.uid).updateData({'chatWith': widget.receiver.uid});
+      Firestore.instance.collection(UniversalVariables.users).document(user.uid).updateData({UniversalVariables.chatWith: widget.receiver.uid});
     });
   }
 
@@ -83,7 +84,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget messageList() {
     return StreamBuilder(
-      stream: Firestore.instance.collection("messages").document(_currentUserId).collection(widget.receiver.uid).orderBy("timestamp", descending : true).snapshots(),
+      stream: Firestore.instance.collection(UniversalVariables.messages).document(_currentUserId).collection(widget.receiver.uid).orderBy(UniversalVariables.timestamp, descending : true).snapshots(),
       builder: (context,AsyncSnapshot<QuerySnapshot> snapshot){
         if(snapshot.data == null){
           return Center(child: CircularProgressIndicator(),);
@@ -125,7 +126,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget senderLayout(Message message) {
     Radius messageRadius = Radius.circular(10);
     Container _container = new Container();
-    if(message.type =='text'){
+    if(message.type == UniversalVariables.text){
       _container = Container(
         margin: EdgeInsets.only(top: 12),
         constraints:
@@ -143,7 +144,7 @@ class _ChatScreenState extends State<ChatScreen> {
           child: getMessage(message),
         ),
       );
-    }else if(message.type == 'image'){
+    }else if(message.type == UniversalVariables.image){
       _container = Container(
         child: FlatButton(
           child: Material(
@@ -164,7 +165,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               errorWidget: (context, url, error) => Material(
                 child: Image.asset(
-                  'images/img_not_available.jpeg',
+                  "images/img_not_available.jpeg",
                   width: 200.0,
                   height: 200.0,
                   fit: BoxFit.cover,
@@ -196,7 +197,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget receiverLayout(Message message) {
     Radius messageRadius = Radius.circular(10);
     Container _container = new Container();
-    if(message.type == 'text'){
+    if(message.type == UniversalVariables.text){
       _container = Container(
         margin: EdgeInsets.only(top: 12),
         constraints:
@@ -214,7 +215,7 @@ class _ChatScreenState extends State<ChatScreen> {
           child: getMessage(message),
         ),
       );
-    }else if(message.type == 'image'){
+    }else if(message.type == UniversalVariables.image){
       _container = Container(
         child: FlatButton(
           child: Material(
@@ -235,7 +236,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               errorWidget: (context, url, error) => Material(
                 child: Image.asset(
-                  'images/img_not_available.jpeg',
+                  "images/img_not_available.jpeg",
                   width: 200.0,
                   height: 200.0,
                   fit: BoxFit.cover,
@@ -390,18 +391,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 filled: true,
                 fillColor: UniversalVariables.separatorColor,
                 suffixIcon: GestureDetector(
-                  child: Icon(Icons.face),
+                  child: Icon(Icons.record_voice_over),
                   onTap: () {},
                 ),
               ),
             ),
           ),
-          isWriting
-              ? Container()
-              : Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Icon(Icons.record_voice_over),
-                ),
           isWriting ? Container() : IconButton(icon:Icon(Icons.camera_alt), onPressed: () => {getImage()},),
           isWriting
               ? Container(
@@ -414,7 +409,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       Icons.send,
                       size: 15,
                     ),
-                    onPressed: () => sendMessage(textFieldController.text,'text'),
+                    onPressed: () => sendMessage(textFieldController.text,UniversalVariables.text),
                   ))
               : Container()
         ],
@@ -424,22 +419,22 @@ class _ChatScreenState extends State<ChatScreen> {
 
   sendMessage(String content, String type) {
     Message _message = new Message();
-    if(type == 'text'){
+    if(type == UniversalVariables.text){
       _message = Message(
         receiverId : widget.receiver.uid,
         senderId : sender.uid,
         message: content,
         timestamp: Timestamp.now(),
-        type:'text',
+        type:UniversalVariables.text,
       );
       textFieldController.clear();
-    }else if(type == 'image'){
+    }else if(type == UniversalVariables.image){
       _message = Message(
         receiverId : widget.receiver.uid,
         senderId : sender.uid,
         message: content,
         timestamp: Timestamp.now(),
-        type:'image',
+        type:UniversalVariables.image,
       );
     }
     setState(() {
@@ -468,7 +463,7 @@ class _ChatScreenState extends State<ChatScreen> {
     storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
       imageUrl = downloadUrl;
       setState(() {
-        sendMessage(imageUrl,'image');
+        sendMessage(imageUrl,UniversalVariables.image);
       });
     }, onError: (err) {
     });
@@ -479,7 +474,7 @@ class _ChatScreenState extends State<ChatScreen> {
       // _callScreenWidget.startCall(channelName, 'dew10170@hotmail.com', _currentUserId);
     // }
     _repository.startCall(callData);
-    Firestore.instance.collection('users').document(_currentUserId).updateData({'chatWith': ''});
+    Firestore.instance.collection(UniversalVariables.users).document(_currentUserId).updateData({UniversalVariables.chatWith: ""});
   }
 
 
@@ -508,8 +503,8 @@ class _ChatScreenState extends State<ChatScreen> {
               receiverId : widget.receiver.uid,
               senderId : sender.uid,
               channelName: channelName,
-              type: 'video',
-              status: 'initiated',
+              type: UniversalVariables.video,
+              status: CallStatus.initiated,
               timestamp: Timestamp.now(),
             );
             
@@ -535,8 +530,8 @@ class _ChatScreenState extends State<ChatScreen> {
               receiverId : widget.receiver.uid,
               senderId : sender.uid,
               channelName: channelName,
-              type: 'voice',
-              status: 'initiated',
+              type: UniversalVariables.voice,
+              status: CallStatus.initiated,
               timestamp: Timestamp.now(),
             );
             

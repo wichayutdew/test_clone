@@ -19,4 +19,16 @@ class UniversalVariables {
       colors: [gradientColorStart, gradientColorEnd],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight);
+
+  
+  static final String users = "users";
+  static final String messages = "messages";
+  static final String chatWith = "chatWith";
+  static final String timestamp = "timestamp";
+  static final String text = "text";
+  static final String video = "video";
+  static final String voice = "voice";
+  static final String image = "image";
+  static final String pushToken = "pushToken";
+  
 }

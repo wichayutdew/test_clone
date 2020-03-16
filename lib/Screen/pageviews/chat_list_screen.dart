@@ -6,7 +6,6 @@ import 'package:test_clone/utils/universal_variables.dart';
 import 'package:test_clone/utils/utilities.dart';
 import 'package:test_clone/widgets/appbar.dart';
 import 'package:test_clone/widgets/custom_tile.dart';
-import 'package:test_clone/widgets/notification_widget.dart';
 
 class ChatListScreen extends StatefulWidget {
   @override
@@ -15,9 +14,9 @@ class ChatListScreen extends StatefulWidget {
 
 //global
 final FirebaseRepository _repository =  FirebaseRepository();
-final NotificationWidget _notificationWidget = NotificationWidget();
 
 class _ChatListScreenState extends State<ChatListScreen> {
+  
   String currentUserid;
   String initials = "";
   
@@ -29,7 +28,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
         currentUserid = user.uid;
         initials =  Utils.getInitials(user.displayName);
       });
-      Firestore.instance.collection('users').document(user.uid).updateData({'chatWith': ''});
+      Firestore.instance.collection(UniversalVariables.users).document(user.uid).updateData({UniversalVariables.chatWith: ''});
     });
   }
 
@@ -41,7 +40,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           Icons.notifications,
           color : Colors.white,
         ),
-        onPressed : () {_notificationWidget.showNotification2();},
+        onPressed : () {},
       ),
       title : UserCircle(initials),
       centerTitle : true,

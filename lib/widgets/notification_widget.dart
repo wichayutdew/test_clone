@@ -8,6 +8,7 @@ import 'package:test_clone/global_navigator/locator.dart';
 import 'package:test_clone/global_navigator/router.dart';
 import 'package:test_clone/models/call.dart';
 import 'package:test_clone/models/user.dart';
+import 'package:test_clone/utils/universal_variables.dart';
 // import 'package:test_clone/widgets/ios_call_screen.dart';
 
 
@@ -172,7 +173,7 @@ class NotificationWidget{
     }
 
     firebaseMessaging.getToken().then((token) {
-      Firestore.instance.collection('users').document(currentUserId).updateData({'pushToken': token});
+      Firestore.instance.collection(UniversalVariables.users).document(currentUserId).updateData({UniversalVariables.pushToken: token});
     });
   }
 
@@ -206,21 +207,5 @@ class NotificationWidget{
     await flutterLocalNotificationsPlugin.show(
         0, message['title'].toString(), message['body'].toString(), platformChannelSpecifics,
         payload: json.encode(message));
-  }
-  
-  void showNotification2() async {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-      'your channel id', 'your channel name', 'your channel description',
-      playSound: true,
-      enableVibration: true,
-      importance: Importance.Max,
-      priority: Priority.High,
-    );
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics =
-        new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-        0, 'Flutter chat demo', 'your channel description', platformChannelSpecifics,
-        payload: 'message');
   }
 }
