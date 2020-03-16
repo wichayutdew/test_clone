@@ -18,6 +18,8 @@ class NotificationWidget{
   // final CallScreenWidget _callScreenWidget = new CallScreenWidget();
   final NavigationService _navigation = locator<NavigationService>();
 
+  bool _isConfigured = false;
+
   static Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
     print(message);
     // if (message.containsKey('data')) {
@@ -36,132 +38,138 @@ class NotificationWidget{
   void registerNotification(currentUserId) {
     // startServiceInPlatform();
     firebaseMessaging.requestNotificationPermissions();
-    firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) {
-        print('onMessage: $message');
-        if(Platform.isIOS){
-          if(message['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['senderId'],
-              channelName: message['channelName'],
-              type: message['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }else if(message['notificationType'] == 'message'){
-            User _sender = User(
-              uid : message['senderId'],
-              profilePhoto: message['profilePhoto'],
-              name: message['name'],
-              username: message['username']
-            );
-            _navigation.navigateTo("/chat_room",arguments: _sender);
+    if (!_isConfigured) {
+      firebaseMessaging.configure(
+        onMessage: (Map<String, dynamic> message) {
+          print('onMessage: $message');
+          if(Platform.isIOS){
+            if(message['notificationType'] == 'call'){
+              IncomingCallData _incomingCallData = IncomingCallData(
+                senderId: message['senderId'],
+                channelName: message['channelName'],
+                type: message['type'],
+              );
+              _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+            }else if(message['notificationType'] == 'message'){
+              User _sender = User(
+                uid : message['senderId'],
+                profilePhoto: message['profilePhoto'],
+                name: message['name'],
+                username: message['username']
+              );
+              _navigation.navigateTo("/chat_room",arguments: _sender);
+            }
           }
-        }
-        else{
-          if(message['data']['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['data']['senderId'],
-              channelName: message['data']['channelName'],
-              type: message['data']['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }else if(message['data']['notificationType'] == 'message'){
-            User _sender = User(
-              uid : message['data']['senderId'],
-              profilePhoto: message['data']['profilePhoto'],
-              name: message['data']['name'],
-              username: message['data']['username']
-            );
-            _navigation.navigateTo("/chat_room",arguments: _sender);
+          else{
+            if(message['data']['notificationType'] == 'call'){
+              IncomingCallData _incomingCallData = IncomingCallData(
+                senderId: message['data']['senderId'],
+                channelName: message['data']['channelName'],
+                type: message['data']['type'],
+              );
+              _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+            }else if(message['data']['notificationType'] == 'message'){
+              User _sender = User(
+                uid : message['data']['senderId'],
+                profilePhoto: message['data']['profilePhoto'],
+                name: message['data']['name'],
+                username: message['data']['username']
+              );
+              _navigation.navigateTo("/chat_room",arguments: _sender);
+            }
           }
-        }
-        showNotification(message['notification']);
-      return;
-      },
-
-      onBackgroundMessage: myBackgroundMessageHandler,
-
-      onResume: (Map<String, dynamic> message) {
-        print('onResume: $message');
-        if(Platform.isIOS){
-          if(message['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['senderId'],
-              channelName: message['channelName'],
-              type: message['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }else if(message['notificationType'] == 'message'){
-            User _sender = User(
-              uid : message['senderId'],
-              profilePhoto: message['profilePhoto'],
-              name: message['name'],
-              username: message['username']
-            );
-            _navigation.navigateTo("/chat_room",arguments: _sender);
-          }
-        }
-        else{
-          if(message['data']['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['data']['senderId'],
-              channelName: message['data']['channelName'],
-              type: message['data']['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }else if(message['data']['notificationType'] == 'message'){
-            User _sender = User(
-              uid : message['data']['senderId'],
-              profilePhoto: message['data']['profilePhoto'],
-              name: message['data']['name'],
-              username: message['data']['username']
-            );
-            _navigation.navigateTo("/chat_room",arguments: _sender);
-          }
-        }
-        showNotification(message['notification']);
+          // showNotification(message['notification']);
         return;
-      }, onLaunch: (Map<String, dynamic> message) {
-        print('onLauch: $message');
-        if(Platform.isIOS){
-          if(message['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['senderId'],
-              channelName: message['channelName'],
-              type: message['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }else if(message['notificationType'] == 'message'){
-            User _sender = User(
-              uid : message['senderId'],
-              profilePhoto: message['profilePhoto'],
-              name: message['name'],
-              username: message['username']
-            );
-            _navigation.navigateTo("/chat_room",arguments: _sender);
+        },
+
+        onBackgroundMessage: myBackgroundMessageHandler,
+
+        onResume: (Map<String, dynamic> message) {
+          print('onResume: $message');
+          if(Platform.isIOS){
+            if(message['notificationType'] == 'call'){
+              IncomingCallData _incomingCallData = IncomingCallData(
+                senderId: message['senderId'],
+                channelName: message['channelName'],
+                type: message['type'],
+              );
+              _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+            }else if(message['notificationType'] == 'message'){
+              User _sender = User(
+                uid : message['senderId'],
+                profilePhoto: message['profilePhoto'],
+                name: message['name'],
+                username: message['username']
+              );
+              _navigation.navigateTo("/chat_room",arguments: _sender);
+            }
           }
-        }
-        else{
-          if(message['data']['notificationType'] == 'call'){
-            IncomingCallData _incomingCallData = IncomingCallData(
-              senderId: message['data']['senderId'],
-              channelName: message['data']['channelName'],
-              type: message['data']['type'],
-            );
-            _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
-          }else if(message['data']['notificationType'] == 'message'){
-            User _sender = User(
-              uid : message['data']['senderId'],
-              profilePhoto: message['data']['profilePhoto'],
-              name: message['data']['name'],
-              username: message['data']['username']
-            );
-            _navigation.navigateTo("/chat_room",arguments: _sender);
+          else{
+            if(message['data']['notificationType'] == 'call'){
+              IncomingCallData _incomingCallData = IncomingCallData(
+                senderId: message['data']['senderId'],
+                channelName: message['data']['channelName'],
+                type: message['data']['type'],
+              );
+              _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+            }else if(message['data']['notificationType'] == 'message'){
+              User _sender = User(
+                uid : message['data']['senderId'],
+                profilePhoto: message['data']['profilePhoto'],
+                name: message['data']['name'],
+                username: message['data']['username']
+              );
+              _navigation.navigateTo("/chat_room",arguments: _sender);
+            }
           }
+          // showNotification(message['notification']);
+          return;
+        },
+        
+        onLaunch: (Map<String, dynamic> message) {
+          print('onLauch: $message');
+          if(Platform.isIOS){
+            if(message['notificationType'] == 'call'){
+              IncomingCallData _incomingCallData = IncomingCallData(
+                senderId: message['senderId'],
+                channelName: message['channelName'],
+                type: message['type'],
+              );
+              _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+            }else if(message['notificationType'] == 'message'){
+              User _sender = User(
+                uid : message['senderId'],
+                profilePhoto: message['profilePhoto'],
+                name: message['name'],
+                username: message['username']
+              );
+              _navigation.navigateTo("/chat_room",arguments: _sender);
+            }
+          }
+          else{
+            if(message['data']['notificationType'] == 'call'){
+              IncomingCallData _incomingCallData = IncomingCallData(
+                senderId: message['data']['senderId'],
+                channelName: message['data']['channelName'],
+                type: message['data']['type'],
+              );
+              _navigation.navigateTo("/incoming_call",arguments: _incomingCallData);
+            }else if(message['data']['notificationType'] == 'message'){
+              User _sender = User(
+                uid : message['data']['senderId'],
+                profilePhoto: message['data']['profilePhoto'],
+                name: message['data']['name'],
+                username: message['data']['username']
+              );
+              _navigation.navigateTo("/chat_room",arguments: _sender);
+            }
+          }
+          // showNotification(message['notification']);
+          return;
         }
-        showNotification(message['notification']);
-        return;
-    });
+      );
+      _isConfigured = true;
+    }
 
     firebaseMessaging.getToken().then((token) {
       Firestore.instance.collection('users').document(currentUserId).updateData({'pushToken': token});

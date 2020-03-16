@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:test_clone/global_navigator/locator.dart';
 import 'package:test_clone/global_navigator/router.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
+import 'package:test_clone/widgets/notification_widget.dart';
 import 'Screen/home_screen.dart';
 import 'Screen/login_screen.dart';
 
@@ -20,6 +21,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp>{
   FirebaseRepository _repository = FirebaseRepository();
+  NotificationWidget _notificationWidget = NotificationWidget();
+
+  @override
+  void initState() {
+    super.initState();
+    _repository.getCurrentUser().then((user){
+      _notificationWidget.registerNotification(user.uid);
+    });
+    _notificationWidget.configLocalNotification();
+  }
   
   @override
   Widget build(BuildContext context){

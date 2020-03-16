@@ -1,11 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_clone/Screen/pageviews/chat_list_screen.dart';
-import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/utils/universal_variables.dart';
-// import 'package:test_clone/widgets/ios_call_screen.dart';
-import 'package:test_clone/widgets/notification_widget.dart';
-// import 'package:test_clone/widgets/push_kit.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -14,11 +10,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  FirebaseRepository _repository = FirebaseRepository();
-  NotificationWidget _notificationWidget = NotificationWidget();
-  // CallScreenWidget _callScreenWidget = CallScreenWidget();
-  // PushKitWidget _pushKitWidget = PushKitWidget();
-
   PageController pageController;
   int _page = 0;
 
@@ -26,12 +17,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     pageController = PageController();
-    _repository.getCurrentUser().then((user){
-      _notificationWidget.registerNotification(user.uid);
-    });
-    _notificationWidget.configLocalNotification();
-    // _pushKitWidget.regiseterPushkit();
-    // _callScreenWidget.callKitConfigure();
   }
 
   void onPageChanged(int page){
