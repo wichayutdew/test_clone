@@ -61,6 +61,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
             color : Colors.white,
           ),
           onPressed : () {
+            Firestore.instance.collection(UniversalVariables.users).document(currentUserid).updateData({UniversalVariables.pushToken:""});
             _repository.signOut();
             Navigator.pop(context); 
             Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => LoginScreen()));
