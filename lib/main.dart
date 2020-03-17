@@ -26,9 +26,6 @@ class _MyAppState extends State<MyApp>{
   @override
   void initState() {
     super.initState();
-    _repository.getCurrentUser().then((user){
-      _notificationWidget.registerNotification(user.uid);
-    });
     _notificationWidget.configLocalNotification();
   }
   
@@ -54,6 +51,7 @@ class _MyAppState extends State<MyApp>{
           future : _repository.getCurrentUser(),
           builder : (context, AsyncSnapshot<FirebaseUser> snapshot){
             if(snapshot.hasData){
+              _notificationWidget.registerNotification(snapshot.data.uid);
               return HomeScreen();
             }else{
               return LoginScreen();

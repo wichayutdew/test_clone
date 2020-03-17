@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:test_clone/Screen/home_screen.dart';
 import 'package:test_clone/resources/firebase_repository.dart';
 import 'package:test_clone/utils/universal_variables.dart';
+import 'package:test_clone/widgets/notification_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
 
   FirebaseRepository _repository = FirebaseRepository();
+  NotificationWidget _notificationWidget = NotificationWidget();
 
   bool isLoginPressed = false;
 
@@ -65,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     _repository.signIn().then((FirebaseUser user){
       if(user != null){
+        _notificationWidget.registerNotification(user.uid);
         authenticateUser(user);
       }else{
         print("error");
