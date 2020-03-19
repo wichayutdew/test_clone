@@ -208,4 +208,20 @@ class NotificationWidget{
         0, message['title'].toString(), message['body'].toString(), platformChannelSpecifics,
         payload: json.encode(message));
   }
+
+  void showNotification2() async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+      'your channel id', 'your channel name', 'your channel description',
+      playSound: true,
+      enableVibration: true,
+      importance: Importance.Max,
+      priority: Priority.High,
+    );
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics =
+        new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, 'Flutter chat demo', 'your channel description', platformChannelSpecifics,
+        payload: 'message');
+  }
 }
